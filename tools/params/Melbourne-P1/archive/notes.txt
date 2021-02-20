@@ -1,0 +1,10 @@
+Notes:
+
+The gradients require a flip in the z-direction
+
+The folks in Melbourne provided the treatment group for each scan, but not the
+specific timepoint.  We had to figure this out from the scan identifier.  In
+most cases, this was explicit, e.g. D02 for day two after injury, but in some
+cases, we had to look at the scan dates to infer the timepoint.
+
+2288 was listed in the groups table with NA

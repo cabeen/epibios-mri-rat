@@ -1,0 +1,6 @@
+{
+  "name": "VolumeCrop",
+  "parameters": {
+    "range": "5:-5,:,5:-5"
+  }
+}

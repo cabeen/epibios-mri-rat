@@ -1,0 +1,7 @@
+{
+  "name": "VolumeFilterNLM",
+  "parameters": {
+    "h": "500",
+    "rician": "false"
+  }
+}

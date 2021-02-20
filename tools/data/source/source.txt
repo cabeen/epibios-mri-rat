@@ -1,0 +1,9 @@
+Received by email from Neil Harris on Feb 13, 2019:
+
+Hi Ryan,
+
+do you want/need to meet to discuss what we talked about on the phone? I 'm somewhat free over the next few days since our MRI is broken, so let me know if you do.
+
+Attached here is an atlas that has been edited from a few published sources (see my 2016 rsfmri paper). The probabilistic stuff for csf, wm, gm is all from 1 original atlas- nothing to do with us but the labels are edited a lot by us.
+
+neil

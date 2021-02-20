@@ -1,0 +1,10 @@
+From idrish.ali@monash.edu on April 26, 2020
+
+Hi Ryan,
+ 
+I have attached the list of animals that we have included in the study for Project 1. Aim 1 animals have undergone only exvivo MRIs whereas Aim2 animals had MRI at 2d, 9d, 1month and 5 month time point in addition to the exvivos. The MRI files should be marked with the timepoints. The sheet has three groups for both aims- shams, TBI, TBI-epileptic.
+Let me know if anything was unclear.
+ 
+Regards
+ 
+IDRISH

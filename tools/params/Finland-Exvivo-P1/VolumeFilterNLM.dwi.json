@@ -1,0 +1,8 @@
+{
+  "name": "VolumeFilterNLM",
+  "parameters": {
+    "h": "0.05",
+    "patch": "2",
+    "rician": "true"
+  }
+}

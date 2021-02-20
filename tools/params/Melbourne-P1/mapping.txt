@@ -1,0 +1,6 @@
+*_RARE_T2,T2wtRARE
+*_MGE,MGE
+mtr/*_MTR_0.0,MT0
+mtr/*_MTR_10,MT
+dwi/*_DtiEpi,DTI
+dwi/*_DtiEpi_Reverse,DTIR
