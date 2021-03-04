@@ -1,3 +1,5 @@
+![epibios](https://github.com/cabeen/epibios-mri-rat/raw/master/docs/media/splash.png)
+
 # EpiBioS4Rx Rodent MRI
 
 This package provides tools for image analysis for rodent MRI data for
