@@ -90,7 +90,7 @@ ALONG_ITERS       ?= 5          # the number of along tract smoothing iters
 # Targets 
 ################################################################################
 
-NT_COMMON          := native.common
+NT_SOURCE          := native.source
 
 NT_DWI             := native.dwi
 NT_MGE             := native.mge
@@ -335,25 +335,25 @@ along.voxel.ms = $(QIT_CMD) CurvesMeasureAlongBatch \
 # Parameter Estimation - DWI 
 ##############################################################################
 
-$(NT_COMMON): $(INPUT)
+$(NT_SOURCE): $(INPUT)
 	bash $(ROOT)/bin/EpibiosAuxConvert.sh $(INPUT) $@
-$(NT_COMMON)/dwi.bvecs.txt: $(NT_COMMON)
-$(NT_COMMON)/dwi.bvals.txt: $(NT_COMMON)
-$(NT_COMMON)/dwi.nii.gz: $(NT_COMMON)
-$(NT_COMMON)/mge.te.txt: $(NT_COMMON)
-$(NT_COMMON)/mge.nii.gz: $(NT_COMMON)
-$(NT_COMMON)/mt.low.nii.gz: $(NT_COMMON)
-$(NT_COMMON)/mt.high.nii.gz: $(NT_COMMON)
+$(NT_SOURCE)/common/dwi.bvecs.txt: $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.bvals.txt: $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.nii.gz: $(NT_SOURCE)
+$(NT_SOURCE)/common/mge.te.txt: $(NT_SOURCE)
+$(NT_SOURCE)/common/mge.nii.gz: $(NT_SOURCE)
+$(NT_SOURCE)/common/mt.low.nii.gz: $(NT_SOURCE)
+$(NT_SOURCE)/common/mt.high.nii.gz: $(NT_SOURCE)
 
-$(NT_RAW_BVECS): $(NT_COMMON)/dwi.bvecs.txt
+$(NT_RAW_BVECS): $(NT_SOURCE)/common/dwi.bvecs.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
-$(NT_RAW_BVALS): $(NT_COMMON)/dwi.bvals.txt
+$(NT_RAW_BVALS): $(NT_SOURCE)/common/dwi.bvals.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
-$(NT_DWI_RAW): $(NT_COMMON)/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
+$(NT_DWI_RAW): $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
 	$(QIT_CMD) VolumeStandardize \
     --input $(word 1, $+) \
     --xfm $(NT_DWI_XFM) \
@@ -431,7 +431,7 @@ $(NT_DWI_BRAIN_MASK): $(NT_DWI_ALL_DTI)
 # Parameter Estimation - MGE  
 ##############################################################################
 
-$(NT_MGE_RAW): $(NT_COMMON)/mge.nii.gz
+$(NT_MGE_RAW): $(NT_SOURCE)/common/mge.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \
@@ -493,7 +493,7 @@ $(NT_MGE_MASK): $(NT_MGE_BIASED)
 # Parameter Estimation - MTR
 ##############################################################################
 
-$(NT_MTR_LOW_RAW): $(NT_COMMON)/mt.low.nii.gz
+$(NT_MTR_LOW_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \
@@ -505,7 +505,7 @@ $(NT_MTR_LOW_RAW): $(NT_COMMON)/mt.low.nii.gz
     --output $@
 	rm $@.tmp.nii.gz
 
-$(NT_MTR_HIGH_RAW): $(NT_COMMON)/mt.low.nii.gz
+$(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \

@@ -10,7 +10,7 @@
 ##############################################################################
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-makefile=${root}/EpibiosProcess.makefile
+makefile=${root}/EpibiosAuxProcess.makefile
 
 name=$(basename $0)
 

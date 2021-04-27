@@ -33,11 +33,11 @@ echo "  using site: ${site}"
 echo "  using subject: ${subject}"
 
 if [ ${site} == "Einstein-P2" ]; then 
-	bash ${root}/bin/EpibiosAuxAgilentImport.sh ${source} ${subject}/native.convert
-	bash ${root}/bin/EpibiosAuxAgilentCommon.sh ${subject}/native.convert ${site} ${subject}/native.common
+	bash ${root}/bin/EpibiosAuxAgilentImport.sh ${source} ${subject}/native.source/convert
+	bash ${root}/bin/EpibiosAuxAgilentCommon.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
 else
-	bash ${root}/bin/EpibiosAuxBrukerImport.sh ${source} ${subject}/native.convert
-	bash ${root}/bin/EpibiosAuxBrukerCommon.sh ${subject}/native.convert ${site} ${subject}/native.common
+	bash ${root}/bin/EpibiosAuxBrukerImport.sh ${source} ${subject}/native.source/convert
+	bash ${root}/bin/EpibiosAuxBrukerCommon.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
 fi
 
 echo "finished"
