@@ -3,16 +3,16 @@
 cd /ifs/loni/postdocs/rcabeen/collab/epibios/rat-project1
 common=/ifs/loni/postdocs/rcabeen/collab/epibios/rat-common
 
-for c in cases/sources/*/*; do
+for c in cases/staging/*/*; do
 
-  logdir=$(echo ${c} | sed 's/sources/log/g')
+  logdir=$(echo ${c} | sed 's/staging/log/g')
   mkdir -p ${logdir} 
 
   qsubcmd --qlog ${logdir} bash \
-   ${common}/tools/repo/tools/bin/EpibiosMainProcess.sh \
+   ${common}/repo/tools/bin/EpibiosMainProcess.sh \
    ${common}/stats \
    ${c} \
-   $(echo ${c} | sed 's/sources/process/g')
+   $(echo ${c} | sed 's/staging/process/g')
 
 done
 

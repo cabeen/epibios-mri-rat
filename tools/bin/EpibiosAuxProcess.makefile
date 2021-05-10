@@ -1159,7 +1159,7 @@ endef
 
 $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_PRIOR) $(AT_DWI_HARMZ)
 	-rm -rf $@
-	$(ROOT)/bin/EpibiosSegmentLesion.sh \
+	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
     --heme $(word 3, $+)/dti_S0.nii.gz \
@@ -1175,7 +1175,7 @@ $(AT_DWI_LESION_MASK): $(AT_DWI_LESION)
 
 $(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_PRIOR) $(AT_MGE_HARMZ)
 	-rm -rf $@
-	$(ROOT)/bin/EpibiosSegmentLesion.sh \
+	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
     --heme $(word 3, $+)/mge_t2star.nii.gz \
@@ -1203,7 +1203,7 @@ $(NT_MGE_PRIOR): $(AT_PRIOR) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 
 $(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_HARMZ)
 	-rm -rf $@
-	$(ROOT)/bin/EpibiosSegmentLesion.sh \
+	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
     --heme $(word 3, $+)/dti_S0.nii.gz \
@@ -1219,7 +1219,7 @@ $(NT_DWI_LESION_MASK): $(NT_DWI_LESION)
 
 $(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_HARMZ)
 	-rm -rf $@
-	$(ROOT)/bin/EpibiosSegmentLesion.sh \
+	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
     --heme $(word 3, $+)/mge_mean.nii.gz \
