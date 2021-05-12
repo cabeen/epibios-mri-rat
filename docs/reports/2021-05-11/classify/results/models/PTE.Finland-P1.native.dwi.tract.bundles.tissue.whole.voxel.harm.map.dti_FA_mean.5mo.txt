@@ -1,0 +1,103 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Finland-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean
+
+Median Lambda: 0.00634133
+
+Coefficients:
+             s0
+1  -1.358011566
+2  -1.767342150
+3  -1.430062171
+4   0.495102811
+6  -1.161391656
+9  -1.945481521
+10 -1.552473052
+13 -0.731721151
+15  1.914373180
+17 -0.000825114
+20  3.238713392
+23  0.123739079
+24  0.457202381
+26 -0.321289626
+27  2.054897061
+28 -1.318167279
+29 -0.250043222
+33  0.224330531
+34  2.320701353
+40  0.007248778
+41 -1.368961063
+42 -1.357954997
+43  0.217096524
+44 -0.555112640
+45  0.514127578
+47 -1.069836187
+48  0.391788185
+49  0.373077212
+                                                                               name
+1                                                                       (Intercept)
+2     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.fimbria_left
+3        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofb_left
+4       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfc_right
+6        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfc_left
+9        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfb_left
+10  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalslat_right
+13   native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsub_right
+15        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ilf_left
+17    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.intcap_right
+20     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.fornix_left
+23  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypven_left
+24          native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.hipcom
+26    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsub_left
+27       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ifof_left
+28       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.atr_right
+29    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cerped_right
+33    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.fornix_right
+34       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfa_left
+40        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ant_comm
+41       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.opticrad_left
+43       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.chip_left
+44  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypdor_left
+45          native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_mid
+47  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsmed_right
+48         native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_temp
+49 native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypdor_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     3     6
+     FALSE    6    17
+                                         
+               Accuracy : 0.625          
+                 95% CI : (0.4369, 0.789)
+    No Information Rate : 0.7188         
+    P-Value [Acc > NIR] : 0.9126         
+                                         
+                  Kappa : 0.0725         
+                                         
+ Mcnemar's Test P-Value : 1.0000         
+                                         
+            Sensitivity : 0.33333        
+            Specificity : 0.73913        
+         Pos Pred Value : 0.33333        
+         Neg Pred Value : 0.73913        
+             Prevalence : 0.28125        
+         Detection Rate : 0.09375        
+   Detection Prevalence : 0.28125        
+      Balanced Accuracy : 0.53623        
+                                         
+       'Positive' Class : TRUE           
+                                         
+
+End

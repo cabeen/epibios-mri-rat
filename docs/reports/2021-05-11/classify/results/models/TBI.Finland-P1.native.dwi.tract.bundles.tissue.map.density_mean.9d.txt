@@ -1,0 +1,87 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  Finland-P1
+
+Timepoint: 9d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.00824644
+
+Coefficients:
+             s0
+1   5.152399228
+2  -0.664554041
+8   0.913838533
+10  1.124995090
+21 -0.251920290
+24 -1.177247045
+26  0.542533354
+27  0.005666443
+31  0.525964673
+32  0.199007523
+33 -0.394428833
+35  0.225796263
+36 -0.143146467
+39  0.100218446
+41 -0.467128926
+42 -0.922667474
+43  1.027095556
+45 -0.197710605
+46 -0.484202914
+47  0.437772648
+                                                               name
+1                                                       (Intercept)
+2     native.dwi.tract.bundles.tissue.map.density_mean.fimbria_left
+8      native.dwi.tract.bundles.tissue.map.density_mean.cerped_left
+10  native.dwi.tract.bundles.tissue.map.density_mean.thalslat_right
+21 native.dwi.tract.bundles.tissue.map.density_mean.amyhypven_right
+24          native.dwi.tract.bundles.tissue.map.density_mean.hipcom
+26    native.dwi.tract.bundles.tissue.map.density_mean.thalsub_left
+27       native.dwi.tract.bundles.tissue.map.density_mean.ifof_left
+31         native.dwi.tract.bundles.tissue.map.density_mean.cc_post
+32     native.dwi.tract.bundles.tissue.map.density_mean.intcap_left
+33    native.dwi.tract.bundles.tissue.map.density_mean.fornix_right
+35      native.dwi.tract.bundles.tissue.map.density_mean.slfb_right
+36   native.dwi.tract.bundles.tissue.map.density_mean.fimbria_right
+39        native.dwi.tract.bundles.tissue.map.density_mean.atr_left
+41       native.dwi.tract.bundles.tissue.map.density_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.map.density_mean.opticrad_left
+43       native.dwi.tract.bundles.tissue.map.density_mean.chip_left
+45          native.dwi.tract.bundles.tissue.map.density_mean.cc_mid
+46       native.dwi.tract.bundles.tissue.map.density_mean.vofa_left
+47  native.dwi.tract.bundles.tissue.map.density_mean.thalsmed_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    11    0
+     TRUE      0   23
+                                     
+               Accuracy : 1          
+                 95% CI : (0.8972, 1)
+    No Information Rate : 0.6765     
+    P-Value [Acc > NIR] : 1.692e-06  
+                                     
+                  Kappa : 1          
+                                     
+ Mcnemar's Test P-Value : NA         
+                                     
+            Sensitivity : 1.0000     
+            Specificity : 1.0000     
+         Pos Pred Value : 1.0000     
+         Neg Pred Value : 1.0000     
+             Prevalence : 0.3235     
+         Detection Rate : 0.3235     
+   Detection Prevalence : 0.3235     
+      Balanced Accuracy : 1.0000     
+                                     
+       'Positive' Class : FALSE      
+                                     
+
+End

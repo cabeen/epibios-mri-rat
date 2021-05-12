@@ -1,0 +1,77 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 30d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean
+
+Median Lambda: 0.0348022
+
+Coefficients:
+           s0
+1  -1.2876817
+3  -0.2215372
+5   0.1442521
+15  0.1133708
+20  0.4743704
+22  0.5712872
+23  0.5309795
+26  0.4177685
+29  0.6517306
+39  0.1708596
+41  0.5794624
+44 -0.1916709
+45 -0.2434716
+46 -0.1121524
+48 -0.6886945
+                                                                             name
+1                                                                     (Intercept)
+3       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.vofb_left
+5       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.slfc_left
+15     native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.vofa_right
+20 native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.amyhypven_left
+22         native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.cc_mid
+23         native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.hipcom
+26      native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.ifof_left
+29      native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.vofa_left
+39 native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.opticrad_right
+41       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.ant_comm
+44  native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.thalslat_left
+45 native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.thalsmed_right
+46  native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.thalsmed_left
+48 native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.amyhypdor_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    14    5
+     TRUE      8    4
+                                          
+               Accuracy : 0.5806          
+                 95% CI : (0.3908, 0.7545)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.9588          
+                                          
+                  Kappa : 0.0736          
+                                          
+ Mcnemar's Test P-Value : 0.5791          
+                                          
+            Sensitivity : 0.6364          
+            Specificity : 0.4444          
+         Pos Pred Value : 0.7368          
+         Neg Pred Value : 0.3333          
+             Prevalence : 0.7097          
+         Detection Rate : 0.4516          
+   Detection Prevalence : 0.6129          
+      Balanced Accuracy : 0.5404          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

@@ -1,0 +1,51 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.158564
+
+Coefficients:
+            s0                                                           name
+1   0.18190723                                                    (Intercept)
+21 -0.02874578     native.dwi.tract.bundles.tissue.map.density_mean.slfd_left
+23 -0.06106189        native.dwi.tract.bundles.tissue.map.density_mean.hipcom
+28 -0.05178155 native.dwi.tract.bundles.tissue.map.density_mean.opticrad_left
+29 -0.09213035     native.dwi.tract.bundles.tissue.map.density_mean.vofa_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE    12     8
+     FALSE   10     1
+                                          
+               Accuracy : 0.4194          
+                 95% CI : (0.2455, 0.6092)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.9998          
+                                          
+                  Kappa : -0.3223         
+                                          
+ Mcnemar's Test P-Value : 0.8137          
+                                          
+            Sensitivity : 0.54545         
+            Specificity : 0.11111         
+         Pos Pred Value : 0.60000         
+         Neg Pred Value : 0.09091         
+             Prevalence : 0.70968         
+         Detection Rate : 0.38710         
+   Detection Prevalence : 0.64516         
+      Balanced Accuracy : 0.32828         
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End

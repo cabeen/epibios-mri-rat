@@ -1,0 +1,59 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 30d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.volume
+
+Median Lambda: 0.129259
+
+Coefficients:
+            s0                                                      name
+1  -0.21336325                                               (Intercept)
+3  -0.05236129      native.dwi.tract.bundles.tissue.map.volume.vofb_left
+5   0.16264536      native.dwi.tract.bundles.tissue.map.volume.slfc_left
+12  0.07175326      native.dwi.tract.bundles.tissue.map.volume.cing_left
+13  0.19718941       native.dwi.tract.bundles.tissue.map.volume.ilf_left
+16  0.37496814      native.dwi.tract.bundles.tissue.map.volume.ilf_right
+20  0.01295779 native.dwi.tract.bundles.tissue.map.volume.amyhypven_left
+21  0.01047155      native.dwi.tract.bundles.tissue.map.volume.slfd_left
+23  0.01535407         native.dwi.tract.bundles.tissue.map.volume.hipcom
+26  0.06816183      native.dwi.tract.bundles.tissue.map.volume.ifof_left
+29  0.04892068      native.dwi.tract.bundles.tissue.map.volume.vofa_left
+40  0.06883547       native.dwi.tract.bundles.tissue.map.volume.atr_left
+48 -0.15041430 native.dwi.tract.bundles.tissue.map.volume.amyhypdor_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    12    5
+     TRUE     10    4
+                                          
+               Accuracy : 0.5161          
+                 95% CI : (0.3306, 0.6985)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.9932          
+                                          
+                  Kappa : -0.0087         
+                                          
+ Mcnemar's Test P-Value : 0.3017          
+                                          
+            Sensitivity : 0.5455          
+            Specificity : 0.4444          
+         Pos Pred Value : 0.7059          
+         Neg Pred Value : 0.2857          
+             Prevalence : 0.7097          
+         Detection Rate : 0.3871          
+   Detection Prevalence : 0.5484          
+      Balanced Accuracy : 0.4949          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

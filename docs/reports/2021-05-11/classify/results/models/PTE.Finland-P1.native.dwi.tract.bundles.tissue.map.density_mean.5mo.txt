@@ -1,0 +1,113 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Finland-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.00862118
+
+Coefficients:
+              s0
+1  -2.2276117516
+2  -1.5068633401
+3  -0.5965506093
+4  -0.4549193264
+5   0.8950744249
+8   1.6338148862
+9   1.1134168239
+10  1.1354496663
+11 -0.4245439603
+14  0.6007097326
+17  0.7484787320
+22 -0.0499150398
+24 -0.0195862782
+25  0.4851765396
+26  1.5698031625
+30 -0.4619266646
+31  1.0822503869
+34  0.0537657560
+35 -0.7236134557
+36  0.9204400911
+37 -1.9985743274
+38 -0.2126739243
+39  0.8596440608
+40 -0.5571489456
+41 -1.9339845995
+42  0.1334287101
+43 -0.3430026759
+44  0.0001629007
+45  0.9668818121
+47 -0.6022880912
+48  0.0546386499
+49  0.2410217948
+50  0.3094580160
+                                                               name
+1                                                       (Intercept)
+2     native.dwi.tract.bundles.tissue.map.density_mean.fimbria_left
+3        native.dwi.tract.bundles.tissue.map.density_mean.vofb_left
+4       native.dwi.tract.bundles.tissue.map.density_mean.slfc_right
+5       native.dwi.tract.bundles.tissue.map.density_mean.ifof_right
+8      native.dwi.tract.bundles.tissue.map.density_mean.cerped_left
+9        native.dwi.tract.bundles.tissue.map.density_mean.slfb_left
+10  native.dwi.tract.bundles.tissue.map.density_mean.thalslat_right
+11      native.dwi.tract.bundles.tissue.map.density_mean.cing_right
+14       native.dwi.tract.bundles.tissue.map.density_mean.cing_left
+17    native.dwi.tract.bundles.tissue.map.density_mean.intcap_right
+22      native.dwi.tract.bundles.tissue.map.density_mean.slfd_right
+24          native.dwi.tract.bundles.tissue.map.density_mean.hipcom
+25      native.dwi.tract.bundles.tissue.map.density_mean.vofb_right
+26    native.dwi.tract.bundles.tissue.map.density_mean.thalsub_left
+30      native.dwi.tract.bundles.tissue.map.density_mean.chip_right
+31         native.dwi.tract.bundles.tissue.map.density_mean.cc_post
+34       native.dwi.tract.bundles.tissue.map.density_mean.slfa_left
+35      native.dwi.tract.bundles.tissue.map.density_mean.slfb_right
+36   native.dwi.tract.bundles.tissue.map.density_mean.fimbria_right
+37  native.dwi.tract.bundles.tissue.map.density_mean.opticrad_right
+38   native.dwi.tract.bundles.tissue.map.density_mean.thalsmed_left
+39        native.dwi.tract.bundles.tissue.map.density_mean.atr_left
+40        native.dwi.tract.bundles.tissue.map.density_mean.ant_comm
+41       native.dwi.tract.bundles.tissue.map.density_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.map.density_mean.opticrad_left
+43       native.dwi.tract.bundles.tissue.map.density_mean.chip_left
+44  native.dwi.tract.bundles.tissue.map.density_mean.amyhypdor_left
+45          native.dwi.tract.bundles.tissue.map.density_mean.cc_mid
+47  native.dwi.tract.bundles.tissue.map.density_mean.thalsmed_right
+48         native.dwi.tract.bundles.tissue.map.density_mean.cc_temp
+49 native.dwi.tract.bundles.tissue.map.density_mean.amyhypdor_right
+50     native.dwi.tract.bundles.tissue.map.density_mean.global_mean
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     1     5
+     FALSE    8    18
+                                         
+               Accuracy : 0.5938         
+                 95% CI : (0.4064, 0.763)
+    No Information Rate : 0.7188         
+    P-Value [Acc > NIR] : 0.9576         
+                                         
+                  Kappa : -0.1183        
+                                         
+ Mcnemar's Test P-Value : 0.5791         
+                                         
+            Sensitivity : 0.11111        
+            Specificity : 0.78261        
+         Pos Pred Value : 0.16667        
+         Neg Pred Value : 0.69231        
+             Prevalence : 0.28125        
+         Detection Rate : 0.03125        
+   Detection Prevalence : 0.18750        
+      Balanced Accuracy : 0.44686        
+                                         
+       'Positive' Class : TRUE           
+                                         
+
+End

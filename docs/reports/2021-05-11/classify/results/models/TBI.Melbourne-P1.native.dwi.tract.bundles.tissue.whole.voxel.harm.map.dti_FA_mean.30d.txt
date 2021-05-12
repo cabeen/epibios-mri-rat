@@ -1,0 +1,101 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 30d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean
+
+Median Lambda: 0.00554357
+
+Coefficients:
+            s0
+1   2.93365422
+2  -0.34203772
+3  -1.68075016
+6   1.01160238
+8   0.38523571
+9   0.13097693
+10  0.73450737
+12  0.62440767
+15  0.37095601
+19  1.90155309
+20 -0.61680759
+21  0.20311835
+22 -1.24018295
+23 -0.10928949
+24  0.13746077
+25 -0.37616422
+26 -0.90227972
+28 -0.06866670
+29 -0.98428113
+36  0.31476162
+37  0.78596790
+42  0.76010233
+44 -0.89202254
+45  0.02047237
+46 -0.70536509
+47  0.50085470
+48 -0.01900686
+                                                                              name
+1                                                                      (Intercept)
+2    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.fimbria_left
+3       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofb_left
+6          native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_ant
+8       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfb_left
+9      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cing_right
+10     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfa_right
+12      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cing_left
+15     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofa_right
+19     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfd_right
+20 native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypven_left
+21      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfd_left
+22         native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_mid
+23         native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.hipcom
+24     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofb_right
+25   native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsub_left
+26      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ifof_left
+28  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.opticrad_left
+29      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofa_left
+36      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfa_left
+37     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfb_right
+42     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ifof_right
+44  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalslat_left
+45 native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsmed_right
+46  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsmed_left
+47        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_temp
+48 native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypdor_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE    15     5
+     FALSE    7     4
+                                          
+               Accuracy : 0.6129          
+                 95% CI : (0.4219, 0.7815)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.9140          
+                                          
+                  Kappa : 0.1185          
+                                          
+ Mcnemar's Test P-Value : 0.7728          
+                                          
+            Sensitivity : 0.6818          
+            Specificity : 0.4444          
+         Pos Pred Value : 0.7500          
+         Neg Pred Value : 0.3636          
+             Prevalence : 0.7097          
+         Detection Rate : 0.4839          
+   Detection Prevalence : 0.6452          
+      Balanced Accuracy : 0.5631          
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End

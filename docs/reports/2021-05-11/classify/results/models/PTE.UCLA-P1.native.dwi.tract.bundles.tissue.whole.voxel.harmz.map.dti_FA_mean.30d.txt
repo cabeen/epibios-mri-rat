@@ -1,0 +1,69 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  UCLA-P1
+
+Timepoint: 30d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean
+
+Median Lambda: 0.0873597
+
+Coefficients:
+            s0
+1  -0.67390409
+2   0.55520110
+3   0.05636796
+8   0.06111041
+13 -0.56766230
+15 -0.47425475
+22  0.08647627
+23 -0.13207750
+31 -0.23720248
+46  0.25994609
+48  0.24649548
+                                                                                name
+1                                                                        (Intercept)
+2     native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.fimbria_left
+3        native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.vofb_left
+8   native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.amyhypdor_left
+13      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfa_right
+15       native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.cing_left
+22 native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.amyhypven_right
+23      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfd_right
+31       native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.vofa_left
+46          native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.hipcom
+48         native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.cc_temp
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     2     7
+     FALSE    5    15
+                                          
+               Accuracy : 0.5862          
+                 95% CI : (0.3894, 0.7648)
+    No Information Rate : 0.7586          
+    P-Value [Acc > NIR] : 0.9883          
+                                          
+                  Kappa : -0.0296         
+                                          
+ Mcnemar's Test P-Value : 0.7728          
+                                          
+            Sensitivity : 0.28571         
+            Specificity : 0.68182         
+         Pos Pred Value : 0.22222         
+         Neg Pred Value : 0.75000         
+             Prevalence : 0.24138         
+         Detection Rate : 0.06897         
+   Detection Prevalence : 0.31034         
+      Balanced Accuracy : 0.48377         
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End

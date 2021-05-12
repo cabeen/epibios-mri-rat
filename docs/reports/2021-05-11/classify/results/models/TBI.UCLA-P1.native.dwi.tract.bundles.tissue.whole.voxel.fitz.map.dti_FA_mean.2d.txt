@@ -1,0 +1,103 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  UCLA-P1
+
+Timepoint: 2d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean
+
+Median Lambda: 0.00632366
+
+Coefficients:
+             s0
+1   4.564419717
+3  -0.897497923
+4   0.839015705
+7   0.095007722
+8   3.272768430
+10 -1.249902971
+12  1.178148650
+16  0.246868085
+19  0.518602330
+20 -0.493282926
+21  0.018886004
+23  1.237234149
+24  0.322404514
+26  0.132319372
+28  0.461035767
+31  0.442803947
+33 -0.979471142
+35 -0.044542477
+38  1.664922538
+39 -0.633970198
+41  0.006894471
+42  0.383562219
+43 -0.994449451
+44  0.096792812
+45  0.578135585
+46 -0.561221373
+47 -0.459848317
+48  2.255929506
+                                                                              name
+1                                                                      (Intercept)
+3       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofb_left
+4      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfc_right
+7          native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_ant
+8  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypdor_left
+10      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfb_left
+12     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cing_right
+16       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_left
+19     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofa_right
+20      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_right
+21    native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fornix_left
+23     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_right
+24 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypven_left
+26     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofb_right
+28      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ifof_left
+31      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofa_left
+33      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.chip_left
+35 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalsmed_right
+38   native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fornix_right
+39      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfa_left
+41  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fimbria_right
+42 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.opticrad_right
+43  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalsmed_left
+44       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.atr_left
+45       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ant_comm
+46         native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.hipcom
+47      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_left
+48        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_temp
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE     6    2
+     TRUE      4   20
+                                          
+               Accuracy : 0.8125          
+                 95% CI : (0.6356, 0.9279)
+    No Information Rate : 0.6875          
+    P-Value [Acc > NIR] : 0.08698         
+                                          
+                  Kappa : 0.5385          
+                                          
+ Mcnemar's Test P-Value : 0.68309         
+                                          
+            Sensitivity : 0.6000          
+            Specificity : 0.9091          
+         Pos Pred Value : 0.7500          
+         Neg Pred Value : 0.8333          
+             Prevalence : 0.3125          
+         Detection Rate : 0.1875          
+   Detection Prevalence : 0.2500          
+      Balanced Accuracy : 0.7545          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

@@ -1,0 +1,93 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 9d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.0374867
+
+Coefficients:
+              s0
+1  -0.4966833363
+4  -0.6497895958
+5   0.2362626490
+7   0.0010292341
+15  0.2649573977
+16 -0.7008968688
+17  0.4211751105
+18  0.2527757211
+19  0.8099220625
+20 -0.1441876076
+21 -1.0183585417
+22  0.2237500741
+23  0.9305613794
+24  0.0001848331
+31 -0.3353478772
+34  0.0072844430
+35  0.0409338199
+37 -0.1881782945
+39  0.2570511635
+43  0.0446656214
+45 -0.2281062590
+46 -0.0688437470
+48 -0.1618069583
+                                                               name
+1                                                       (Intercept)
+4       native.dwi.tract.bundles.tissue.map.density_mean.slfc_right
+5        native.dwi.tract.bundles.tissue.map.density_mean.slfc_left
+7      native.dwi.tract.bundles.tissue.map.density_mean.cerped_left
+15      native.dwi.tract.bundles.tissue.map.density_mean.vofa_right
+16       native.dwi.tract.bundles.tissue.map.density_mean.ilf_right
+17     native.dwi.tract.bundles.tissue.map.density_mean.fornix_left
+18 native.dwi.tract.bundles.tissue.map.density_mean.amyhypven_right
+19      native.dwi.tract.bundles.tissue.map.density_mean.slfd_right
+20  native.dwi.tract.bundles.tissue.map.density_mean.amyhypven_left
+21       native.dwi.tract.bundles.tissue.map.density_mean.slfd_left
+22          native.dwi.tract.bundles.tissue.map.density_mean.cc_mid
+23          native.dwi.tract.bundles.tissue.map.density_mean.hipcom
+24      native.dwi.tract.bundles.tissue.map.density_mean.vofb_right
+31       native.dwi.tract.bundles.tissue.map.density_mean.chip_left
+34     native.dwi.tract.bundles.tissue.map.density_mean.intcap_left
+35    native.dwi.tract.bundles.tissue.map.density_mean.fornix_right
+37      native.dwi.tract.bundles.tissue.map.density_mean.slfb_right
+39  native.dwi.tract.bundles.tissue.map.density_mean.opticrad_right
+43  native.dwi.tract.bundles.tissue.map.density_mean.thalslat_right
+45  native.dwi.tract.bundles.tissue.map.density_mean.thalsmed_right
+46   native.dwi.tract.bundles.tissue.map.density_mean.thalsmed_left
+48  native.dwi.tract.bundles.tissue.map.density_mean.amyhypdor_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    11    8
+     TRUE     11    1
+                                          
+               Accuracy : 0.3871          
+                 95% CI : (0.2185, 0.5781)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 1.0000          
+                                          
+                  Kappa : -0.354          
+                                          
+ Mcnemar's Test P-Value : 0.6464          
+                                          
+            Sensitivity : 0.50000         
+            Specificity : 0.11111         
+         Pos Pred Value : 0.57895         
+         Neg Pred Value : 0.08333         
+             Prevalence : 0.70968         
+         Detection Rate : 0.35484         
+   Detection Prevalence : 0.61290         
+      Balanced Accuracy : 0.30556         
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

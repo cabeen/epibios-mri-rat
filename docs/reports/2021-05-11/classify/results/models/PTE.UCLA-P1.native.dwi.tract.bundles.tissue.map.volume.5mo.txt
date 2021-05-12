@@ -1,0 +1,71 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  UCLA-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.volume
+
+Median Lambda: 0.0249529
+
+Coefficients:
+             s0                                                      name
+1  -1.330266229                                               (Intercept)
+2   0.125740549   native.dwi.tract.bundles.tissue.map.volume.fimbria_left
+8   0.236092341 native.dwi.tract.bundles.tissue.map.volume.amyhypdor_left
+10  0.701234870      native.dwi.tract.bundles.tissue.map.volume.slfb_left
+11  0.342083791 native.dwi.tract.bundles.tissue.map.volume.thalslat_right
+17  0.037162832  native.dwi.tract.bundles.tissue.map.volume.thalslat_left
+19 -0.688187581     native.dwi.tract.bundles.tissue.map.volume.vofa_right
+20 -0.045416867      native.dwi.tract.bundles.tissue.map.volume.ilf_right
+21 -0.005246680    native.dwi.tract.bundles.tissue.map.volume.fornix_left
+24 -0.371401316 native.dwi.tract.bundles.tissue.map.volume.amyhypven_left
+25  0.006801517         native.dwi.tract.bundles.tissue.map.volume.cc_mid
+27  0.526699527   native.dwi.tract.bundles.tissue.map.volume.thalsub_left
+28 -0.118221385      native.dwi.tract.bundles.tissue.map.volume.ifof_left
+31 -0.566795243      native.dwi.tract.bundles.tissue.map.volume.vofa_left
+34 -0.249552999     native.dwi.tract.bundles.tissue.map.volume.chip_right
+35  0.328037494 native.dwi.tract.bundles.tissue.map.volume.thalsmed_right
+38 -1.002714379   native.dwi.tract.bundles.tissue.map.volume.fornix_right
+39  1.416903888      native.dwi.tract.bundles.tissue.map.volume.slfa_left
+40 -0.248505148     native.dwi.tract.bundles.tissue.map.volume.slfb_right
+41 -0.451026417  native.dwi.tract.bundles.tissue.map.volume.fimbria_right
+42  0.897431929 native.dwi.tract.bundles.tissue.map.volume.opticrad_right
+44  0.015738843       native.dwi.tract.bundles.tissue.map.volume.atr_left
+45  0.301940615       native.dwi.tract.bundles.tissue.map.volume.ant_comm
+47 -0.967837025      native.dwi.tract.bundles.tissue.map.volume.slfd_left
+48 -0.249610210        native.dwi.tract.bundles.tissue.map.volume.cc_temp
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     4     3
+     FALSE    3    19
+                                          
+               Accuracy : 0.7931          
+                 95% CI : (0.6028, 0.9201)
+    No Information Rate : 0.7586          
+    P-Value [Acc > NIR] : 0.4287          
+                                          
+                  Kappa : 0.4351          
+                                          
+ Mcnemar's Test P-Value : 1.0000          
+                                          
+            Sensitivity : 0.5714          
+            Specificity : 0.8636          
+         Pos Pred Value : 0.5714          
+         Neg Pred Value : 0.8636          
+             Prevalence : 0.2414          
+         Detection Rate : 0.1379          
+   Detection Prevalence : 0.2414          
+      Balanced Accuracy : 0.7175          
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End

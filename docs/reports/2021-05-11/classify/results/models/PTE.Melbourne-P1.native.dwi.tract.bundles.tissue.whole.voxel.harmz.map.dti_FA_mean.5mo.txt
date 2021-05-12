@@ -1,0 +1,55 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean
+
+Median Lambda: 0.203885
+
+Coefficients:
+             s0
+1  -0.035627444
+16 -0.009458425
+17  0.224505462
+45 -0.088292344
+                                                                               name
+1                                                                       (Intercept)
+16      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.ilf_right
+17    native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.fornix_left
+45 native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.thalsmed_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE     9    1
+     TRUE     13    8
+                                          
+               Accuracy : 0.5484          
+                 95% CI : (0.3603, 0.7268)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.982304        
+                                          
+                  Kappa : 0.2138          
+                                          
+ Mcnemar's Test P-Value : 0.003283        
+                                          
+            Sensitivity : 0.4091          
+            Specificity : 0.8889          
+         Pos Pred Value : 0.9000          
+         Neg Pred Value : 0.3810          
+             Prevalence : 0.7097          
+         Detection Rate : 0.2903          
+   Detection Prevalence : 0.3226          
+      Balanced Accuracy : 0.6490          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

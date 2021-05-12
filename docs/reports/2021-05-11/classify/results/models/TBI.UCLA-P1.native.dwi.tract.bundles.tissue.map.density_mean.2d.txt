@@ -1,0 +1,64 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  UCLA-P1
+
+Timepoint: 2d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.0795523
+
+Coefficients:
+             s0                                                            name
+1   1.332078690                                                     (Intercept)
+3  -0.056107490      native.dwi.tract.bundles.tissue.map.density_mean.vofb_left
+5  -0.035922872     native.dwi.tract.bundles.tissue.map.density_mean.ifof_right
+7   0.366211101         native.dwi.tract.bundles.tissue.map.density_mean.cc_ant
+8  -0.006386695 native.dwi.tract.bundles.tissue.map.density_mean.amyhypdor_left
+9   0.088353149    native.dwi.tract.bundles.tissue.map.density_mean.cerped_left
+11 -0.082416025 native.dwi.tract.bundles.tissue.map.density_mean.thalslat_right
+13  0.297650402     native.dwi.tract.bundles.tissue.map.density_mean.slfa_right
+18 -0.048556619   native.dwi.tract.bundles.tissue.map.density_mean.intcap_right
+19  0.215605228     native.dwi.tract.bundles.tissue.map.density_mean.vofa_right
+26  0.115045405     native.dwi.tract.bundles.tissue.map.density_mean.vofb_right
+31 -0.577001523      native.dwi.tract.bundles.tissue.map.density_mean.vofa_left
+33 -0.956924311      native.dwi.tract.bundles.tissue.map.density_mean.chip_left
+34  0.056548290     native.dwi.tract.bundles.tissue.map.density_mean.chip_right
+40  0.053551736     native.dwi.tract.bundles.tissue.map.density_mean.slfb_right
+41 -0.050275623  native.dwi.tract.bundles.tissue.map.density_mean.fimbria_right
+42  0.139714160 native.dwi.tract.bundles.tissue.map.density_mean.opticrad_right
+44  0.138654458       native.dwi.tract.bundles.tissue.map.density_mean.atr_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE     6    4
+     TRUE      4   18
+                                         
+               Accuracy : 0.75           
+                 95% CI : (0.566, 0.8854)
+    No Information Rate : 0.6875         
+    P-Value [Acc > NIR] : 0.2896         
+                                         
+                  Kappa : 0.4182         
+                                         
+ Mcnemar's Test P-Value : 1.0000         
+                                         
+            Sensitivity : 0.6000         
+            Specificity : 0.8182         
+         Pos Pred Value : 0.6000         
+         Neg Pred Value : 0.8182         
+             Prevalence : 0.3125         
+         Detection Rate : 0.1875         
+   Detection Prevalence : 0.3125         
+      Balanced Accuracy : 0.7091         
+                                         
+       'Positive' Class : FALSE          
+                                         
+
+End

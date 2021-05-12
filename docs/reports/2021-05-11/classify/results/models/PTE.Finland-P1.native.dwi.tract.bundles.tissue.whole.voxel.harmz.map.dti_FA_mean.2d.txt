@@ -1,0 +1,81 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Finland-P1
+
+Timepoint: 2d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean
+
+Median Lambda: 0.0595861
+
+Coefficients:
+            s0
+1  -0.88854815
+4   0.02503404
+8  -0.12216370
+9   0.52769817
+10 -0.21335520
+15  0.80336775
+17 -0.09301887
+22 -0.24122545
+26 -0.08105847
+29 -0.28374785
+31  0.34216065
+34  0.18871660
+35  0.35027344
+40 -0.66535256
+44  0.39042582
+46  0.25190805
+49  0.15731008
+                                                                                name
+1                                                                        (Intercept)
+4       native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfc_right
+8      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.cerped_left
+9        native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfb_left
+10  native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.thalslat_right
+15        native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.ilf_left
+17    native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.intcap_right
+22      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfd_right
+26    native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.thalsub_left
+29    native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.cerped_right
+31         native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.cc_post
+34       native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfa_left
+35      native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.slfb_right
+40        native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.ant_comm
+44  native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.amyhypdor_left
+46       native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.vofa_left
+49 native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.amyhypdor_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     4     5
+     FALSE    5    18
+                                          
+               Accuracy : 0.6875          
+                 95% CI : (0.4999, 0.8388)
+    No Information Rate : 0.7188          
+    P-Value [Acc > NIR] : 0.7283          
+                                          
+                  Kappa : 0.2271          
+                                          
+ Mcnemar's Test P-Value : 1.0000          
+                                          
+            Sensitivity : 0.4444          
+            Specificity : 0.7826          
+         Pos Pred Value : 0.4444          
+         Neg Pred Value : 0.7826          
+             Prevalence : 0.2812          
+         Detection Rate : 0.1250          
+   Detection Prevalence : 0.2812          
+      Balanced Accuracy : 0.6135          
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End

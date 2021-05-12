@@ -1,0 +1,89 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Finland-P1
+
+Timepoint: 9d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean
+
+Median Lambda: 0.0204644
+
+Coefficients:
+             s0
+1  -0.797988105
+3   1.152988987
+6  -0.708161567
+7  -0.440038361
+12  0.015032399
+15  0.379071492
+19  0.006177538
+20  0.218091626
+26  0.298700376
+28 -0.087043056
+30 -1.666482817
+31 -0.047784323
+38  0.041648950
+39  0.164521413
+41 -1.322794216
+42 -1.055588429
+44 -0.668556477
+45 -0.392381814
+46  0.548473568
+47  0.332538580
+49 -0.148956640
+                                                                               name
+1                                                                       (Intercept)
+3        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofb_left
+6        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfc_left
+7           native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_ant
+12      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfa_right
+15        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ilf_left
+19       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.ilf_right
+20     native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.fornix_left
+26    native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsub_left
+28       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.atr_right
+30      native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.chip_right
+31         native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_post
+38   native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsmed_left
+39        native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.atr_left
+41       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.opticrad_left
+44  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypdor_left
+45          native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.cc_mid
+46       native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.vofa_left
+47  native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.thalsmed_right
+49 native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean.amyhypdor_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     4     7
+     FALSE    5    16
+                                         
+               Accuracy : 0.625          
+                 95% CI : (0.4369, 0.789)
+    No Information Rate : 0.7188         
+    P-Value [Acc > NIR] : 0.9126         
+                                         
+                  Kappa : 0.1312         
+                                         
+ Mcnemar's Test P-Value : 0.7728         
+                                         
+            Sensitivity : 0.4444         
+            Specificity : 0.6957         
+         Pos Pred Value : 0.3636         
+         Neg Pred Value : 0.7619         
+             Prevalence : 0.2812         
+         Detection Rate : 0.1250         
+   Detection Prevalence : 0.3438         
+      Balanced Accuracy : 0.5700         
+                                         
+       'Positive' Class : TRUE           
+                                         
+
+End

@@ -1,0 +1,4 @@
+site,tp,param,metric,ntbi,npte,df,rsq,arsq,beta,stde,tval,pval
+Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.ilf_right,22,9,29,0.0568093817570222,0.0242855673348505,-0.516557784392333,0.390849550045547,-1.32162819256703,0.196623956132743
+Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.fornix_left,22,9,29,0.0697866707081181,0.037710349008398,0.572525875020888,0.388151402179403,1.4750065871365,0.150985801574095
+Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean,native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean.thalsmed_right,22,9,29,0.0391282262062597,0.00599471676509611,-0.428700469776949,0.394495994655718,-1.0867042392942,0.286117872793272

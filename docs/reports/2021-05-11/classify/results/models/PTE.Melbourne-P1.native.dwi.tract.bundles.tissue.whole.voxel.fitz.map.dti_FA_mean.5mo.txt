@@ -1,0 +1,81 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Melbourne-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean
+
+Median Lambda: 0.0165978
+
+Coefficients:
+            s0
+1  -0.65705261
+6  -0.33747702
+11  0.12739338
+12  0.23026510
+13  0.64056448
+15 -0.16596771
+16 -0.59711316
+18 -0.09615022
+21  0.60580214
+23  0.08588990
+26  0.32423054
+30  0.11696743
+41  0.07888827
+43 -0.28377061
+46  0.75847568
+47  0.27537173
+48  0.44876391
+                                                                               name
+1                                                                       (Intercept)
+6           native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_ant
+11   native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalsub_right
+12       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cing_left
+13        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_left
+15      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofa_right
+16       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_right
+18 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypven_right
+21       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_left
+23          native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.hipcom
+26       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ifof_left
+30    native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cerped_right
+41        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ant_comm
+43  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalslat_right
+46   native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalsmed_left
+47         native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_temp
+48  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypdor_left
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE     8    4
+     TRUE     14    5
+                                          
+               Accuracy : 0.4194          
+                 95% CI : (0.2455, 0.6092)
+    No Information Rate : 0.7097          
+    P-Value [Acc > NIR] : 0.99981         
+                                          
+                  Kappa : -0.0608         
+                                          
+ Mcnemar's Test P-Value : 0.03389         
+                                          
+            Sensitivity : 0.3636          
+            Specificity : 0.5556          
+         Pos Pred Value : 0.6667          
+         Neg Pred Value : 0.2632          
+             Prevalence : 0.7097          
+         Detection Rate : 0.2581          
+   Detection Prevalence : 0.3871          
+      Balanced Accuracy : 0.4596          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

@@ -1,0 +1,83 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  Finland-P1
+
+Timepoint: 9d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean
+
+Median Lambda: 0.00907256
+
+Coefficients:
+           s0
+1   4.9666918
+2  -0.6675592
+3  -0.1977209
+5   0.2595223
+6   0.2075934
+9  -0.6071303
+17  0.8427690
+19  0.3293268
+24 -1.0819359
+26 -0.3355729
+29  0.6366151
+34 -0.8847692
+40  1.0146655
+41 -0.1740288
+42 -0.7718160
+43 -0.8699146
+46 -0.1701007
+49  0.3343490
+                                                                              name
+1                                                                      (Intercept)
+2     native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.fimbria_left
+3        native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.vofb_left
+5       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.ifof_right
+6        native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.slfc_left
+9        native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.slfb_left
+17    native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.intcap_right
+19       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.ilf_right
+24          native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.hipcom
+26    native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.thalsub_left
+29    native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.cerped_right
+34       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.slfa_left
+40        native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.ant_comm
+41       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.opticrad_left
+43       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.chip_left
+46       native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.vofa_left
+49 native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean.amyhypdor_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    10    0
+     TRUE      1   23
+                                          
+               Accuracy : 0.9706          
+                 95% CI : (0.8467, 0.9993)
+    No Information Rate : 0.6765          
+    P-Value [Acc > NIR] : 2.921e-05       
+                                          
+                  Kappa : 0.9312          
+                                          
+ Mcnemar's Test P-Value : 1               
+                                          
+            Sensitivity : 0.9091          
+            Specificity : 1.0000          
+         Pos Pred Value : 1.0000          
+         Neg Pred Value : 0.9583          
+             Prevalence : 0.3235          
+         Detection Rate : 0.2941          
+   Detection Prevalence : 0.2941          
+      Balanced Accuracy : 0.9545          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

@@ -1,0 +1,66 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: Sham vs TBI
+
+Sites: 
+  Finland-P1
+
+Timepoint: 30d
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.map.density_mean
+
+Median Lambda: 0.0107864
+
+Coefficients:
+            s0                                                             name
+1   5.48747663                                                      (Intercept)
+2  -0.51639346    native.dwi.tract.bundles.tissue.map.density_mean.fimbria_left
+3  -0.08343511       native.dwi.tract.bundles.tissue.map.density_mean.vofb_left
+8   0.20962330     native.dwi.tract.bundles.tissue.map.density_mean.cerped_left
+20  0.13392118     native.dwi.tract.bundles.tissue.map.density_mean.fornix_left
+21 -0.02000342 native.dwi.tract.bundles.tissue.map.density_mean.amyhypven_right
+22 -0.45432891      native.dwi.tract.bundles.tissue.map.density_mean.slfd_right
+23  0.15031168  native.dwi.tract.bundles.tissue.map.density_mean.amyhypven_left
+24 -0.49695973          native.dwi.tract.bundles.tissue.map.density_mean.hipcom
+26  0.64240401    native.dwi.tract.bundles.tissue.map.density_mean.thalsub_left
+29 -0.04496603    native.dwi.tract.bundles.tissue.map.density_mean.cerped_right
+32  0.25012331     native.dwi.tract.bundles.tissue.map.density_mean.intcap_left
+33 -0.01813322    native.dwi.tract.bundles.tissue.map.density_mean.fornix_right
+41 -0.24661867       native.dwi.tract.bundles.tissue.map.density_mean.slfd_left
+42 -0.94578556   native.dwi.tract.bundles.tissue.map.density_mean.opticrad_left
+43  0.90090443       native.dwi.tract.bundles.tissue.map.density_mean.chip_left
+44 -0.17224017  native.dwi.tract.bundles.tissue.map.density_mean.amyhypdor_left
+45 -0.17039907          native.dwi.tract.bundles.tissue.map.density_mean.cc_mid
+46 -1.02359230       native.dwi.tract.bundles.tissue.map.density_mean.vofa_left
+50 -0.01374541     native.dwi.tract.bundles.tissue.map.density_mean.global_mean
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE TRUE
+     FALSE    11    2
+     TRUE      0   21
+                                          
+               Accuracy : 0.9412          
+                 95% CI : (0.8032, 0.9928)
+    No Information Rate : 0.6765          
+    P-Value [Acc > NIR] : 0.0002464       
+                                          
+                  Kappa : 0.8717          
+                                          
+ Mcnemar's Test P-Value : 0.4795001       
+                                          
+            Sensitivity : 1.0000          
+            Specificity : 0.9130          
+         Pos Pred Value : 0.8462          
+         Neg Pred Value : 1.0000          
+             Prevalence : 0.3235          
+         Detection Rate : 0.3235          
+   Detection Prevalence : 0.3824          
+      Balanced Accuracy : 0.9565          
+                                          
+       'Positive' Class : FALSE           
+                                          
+
+End

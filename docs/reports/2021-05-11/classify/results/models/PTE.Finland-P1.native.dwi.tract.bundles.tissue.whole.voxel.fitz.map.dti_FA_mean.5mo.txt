@@ -1,0 +1,107 @@
+EPIBIOS Rodent PTE Classification Report
+
+Task: TBI vs PTE
+
+Sites: 
+  Finland-P1
+
+Timepoint: 5mo
+
+Parameters: 
+  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean
+
+Median Lambda: 0.0055726
+
+Coefficients:
+            s0
+1  -2.17054631
+2   1.14339644
+3   0.81948083
+4  -0.40460363
+6  -0.55658783
+8  -0.43279681
+9  -0.29569882
+10 -0.81983712
+14 -1.34531258
+15  1.15053540
+19  0.21349729
+20  0.28458483
+21  0.07469562
+22 -0.48226338
+23 -0.37219140
+25 -0.52517071
+27  0.39145842
+28 -0.45460661
+32 -0.20536710
+34  1.35792046
+36  1.12895761
+37 -0.34607230
+40 -2.52547366
+41 -1.11680265
+42 -1.26658950
+43  0.40599167
+45 -1.33138850
+47 -1.13311352
+48  0.26243477
+49 -0.19488027
+                                                                               name
+1                                                                       (Intercept)
+2     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fimbria_left
+3        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofb_left
+4       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfc_right
+6        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfc_left
+8      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cerped_left
+9        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfb_left
+10  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalslat_right
+14       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cing_left
+15        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_left
+19       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ilf_right
+20     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fornix_left
+21 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypven_right
+22      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_right
+23  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypven_left
+25      native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.vofb_right
+27       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ifof_left
+28       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.atr_right
+32     native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.intcap_left
+34       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfa_left
+36   native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.fimbria_right
+37  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.opticrad_right
+40        native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.ant_comm
+41       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_left
+42   native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.opticrad_left
+43       native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.chip_left
+45          native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_mid
+47  native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.thalsmed_right
+48         native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.cc_temp
+49 native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.amyhypdor_right
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction TRUE FALSE
+     TRUE     4     6
+     FALSE    5    17
+                                          
+               Accuracy : 0.6562          
+                 95% CI : (0.4681, 0.8143)
+    No Information Rate : 0.7188          
+    P-Value [Acc > NIR] : 0.8377          
+                                          
+                  Kappa : 0.1776          
+                                          
+ Mcnemar's Test P-Value : 1.0000          
+                                          
+            Sensitivity : 0.4444          
+            Specificity : 0.7391          
+         Pos Pred Value : 0.4000          
+         Neg Pred Value : 0.7727          
+             Prevalence : 0.2812          
+         Detection Rate : 0.1250          
+   Detection Prevalence : 0.3125          
+      Balanced Accuracy : 0.5918          
+                                          
+       'Positive' Class : TRUE            
+                                          
+
+End
