@@ -1,5 +1,11 @@
 #! /usr/bin/env Rscript 
 
+args = commandArgs(trailingOnly=TRUE)
+if (length(args)==0) 
+{
+  stop("usage: Rscript run.sh <tables_dir>", call.=FALSE)
+} 
+
 library(ggplot2)
 library(purrr)
 library(tidyr)
@@ -9,43 +15,62 @@ library(caret)
 library(dplyr)
 
 # This is the directory to where you have the data tables saved
-root <- "/Users/rcabeen/sandbox/epibios/2021-05-11"
+root <- args[1]
 
+#
+#  This function reads a collection of parameters from one or many sites
+# 
+#  Input:
+#    params: a vector of parameter strings (must match the table filenames)
+#    site: a vector of site names (again, must match the table filenames)
+#
+#  Output:
+#    a list that contains a data frame and a list of imaging parameters 
+#
 epibios.read.table <- function(params, sites)
 {
+  # A vector to store the imaging metrics variable names
   out.metrics <- NULL
+
+  # A data frame to store the measurements for each variable and case
   out.df <- NULL
   
+  # Process each parameter (corresponds to a single data table)
   for (param in params)
   {
     my.metrics <- NULL 
     sites.metrics <- NULL
     sites.df <- NULL 
   
+    # Process each site (corresponds to a different data table)
     for (site in sites)
     {
-      img.fn <- sprintf("%s/group/tables/%s/%s.csv", root, site, param)
+      # Construct the expected table filename
+      img.fn <- sprintf("%s/%s/%s.csv", root, site, param)
    
       cat(sprintf("reading table: %s\n", img.fn))
       my.df <- read.csv(img.fn)
+
+      # Identify the imaging parameters (not metadata)
       meta.fields <- c("group", "id", "site", "subject", "tp")
       my.metrics <- names(my.df)[-which(colnames(my.df) %in% meta.fields)]
       
-      pte.fn <- sprintf("%s/group/tables/%s/pte.csv", root, site)
+      # Determine the PTE vs TBI condition
+      pte.fn <- sprintf("%s/%s/pte.csv", root, site)
       cat(sprintf("reading table: %s\n", pte.fn))
       my.df <- merge(read.csv(pte.fn), my.df)
       my.df$status <- factor(my.df$status, levels=c("Sham", "TBI", "PTE"))
     
-      # add the global mean
+      # Add the global mean
       my.df$global_mean <- rowMeans(my.df[,my.metrics], na.rm=TRUE)
       my.metrics <- c(my.metrics, "global_mean")
 
+      # Rename the variables to store the names of the anatomy and parameter
       sites.metrics <- paste(param, my.metrics, sep=".")
       sites.df <- rbind(sites.df, my.df)
     }
 
-    cat("read table!\n")
-    
+    # Do some data wrangling    
     for (metric in my.metrics)
     {
       pasted <- paste(param, metric, sep=".")
@@ -64,6 +89,9 @@ epibios.read.table <- function(params, sites)
     }
   }
   
+  # We already have measurements at each timepoint, but this step will
+  # give us the difference between timepoints, e.g. diff_30d_2d is
+  # the difference between the 30 day and 2 day parameter values for a case 
   long.df <- gather(out.df, metric, value, out.metrics, factor_key=TRUE)
   long.df <- subset(long.df, select=-c(subject) )
   wide.df <- spread(long.df, tp, value)
@@ -90,6 +118,9 @@ epibios.read.table <- function(params, sites)
   long.df <- gather(wide.df, tp, value, tps, factor_key=TRUE)
   out.df <- spread(long.df, metric, value)
 
+  # Do a final standardization step to reduce inter-site differences
+  # This computes the mean and standard deviation of all TBI cases
+  # and then normalizing the whole cohort based on that
   for (tp in tps) 
   {
     for (region in out.metrics)
@@ -104,12 +135,33 @@ epibios.read.table <- function(params, sites)
 			}
     }
   }
-  
+ 
+  # Return the data frame and list of variables 
   return(list(df=out.df, metrics=out.metrics))
 }
 
+#
+#  This function runs a classification analysis for a collection of 
+#  parameters from one or many sites
+# 
+#  Input:
+#    params: a vector of parameter strings (must match the table filenames)
+#    site: a vector of site names (again, must match the table filenames)
+#    time: a vector of timepoints
+#    tbi: if true, this will run a TBI vs Sham comparison, otherwise
+#         a TBI vs PTE comparison is made
+#    alpha: the hyperparameter for elasic net regression
+#
+#  Output:
+#    none, but it will produce outputs in the the results directory
+#
 epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
 {
+	dir.create("results/models", showWarnings=FALSE, recursive=T)
+	dir.create("results/plots", showWarnings=FALSE, recursive=T)
+	dir.create("results/stats", showWarnings=FALSE, recursive=T)
+
+  # Construct the variable name
   name <- sprintf("%s.%s.%s.%s", if(tbi) "TBI" else "PTE", paste(sites, sep="-"), paste(params, sep="-"), time)
   
   cat("processing case\n")
@@ -120,11 +172,15 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
   
   tryCatch(
   {
+    # Read the table (data frame and variable names)
     my.table <- epibios.read.table(params, sites)
+
+    # Extract only the relevant timepoint
     df <- my.table$df 
     metrics <- my.table$metrics
     df <- df[df$tp == time,]
    
+    # Define an appropriate outcome (whether TBI vs Sham, or TBI vs PTE)
     if (tbi)
     {
       df <- df[!df$status %in% c("PTE"),]
@@ -134,26 +190,34 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
       df$outcome <- df$status == "PTE"
     }
     
+    # Start cross-validation step for classifier estimation and 
+    # validation using leave-one-out cross-validation (LOOCV)
     out.df <- NULL
     numcv <- nrow(df)
     for (i in 1:numcv)
     {
       cat(sprintf("processing fold: %d of %d\n", i, numcv))
-      train.df <- df[-i,]
-      test.df <- df[i,]
+      train.df <- df[-i,] # Train on all but one
+      test.df <- df[i,] # Test on a single hold-out
       
       my.test.x <- as.matrix(test.df[,metrics])
       my.test.y <- as.factor(test.df$outcome)
-      
+     
       my.train.x <- as.matrix(train.df[,metrics])
       my.train.y <- as.factor(train.df$outcome)
+
+      # Upsample to reduce bias due to class imbalance
       my.up <- caret::upSample(my.train.x, my.train.y)
       my.train.x <- as.matrix(my.up[,-ncol(my.up)])
       my.train.y <- my.up$Class
-      
+     
+      # Fit the elastic net using an inner-loop of LOOCV to optimize lambda
       my.fit.cv <- cv.glmnet(x=my.train.x, y=my.train.y, family="binomial", alpha=alpha, nfolds=nrow(train.df))
+
+      # Estimate the prediction on the hold-out case using the best lambda
       my.pred <- predict(my.fit.cv, my.test.x, s="lambda.min")
-      
+     
+      # Retain the results for later summarization
       for (j in 1:length(my.pred))
       {
         out.df <- rbind(out.df, data.frame(
@@ -165,13 +229,17 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
       }
     }
     
+    # After LOOCV, fit an elastic net using all of the data
+    # This is only so we can get a sense of the optimal coefficients
+    # We use the median lambda value across all of the folds
     my.lamb <- median(out.df$lamb)
     my.fit <- glmnet(x=my.train.x, y=my.train.y, lambda=my.lamb, family="binomial", alpha=alpha)
     my.coef <- coef(my.fit)
     my.coef.df <- as.data.frame(as.matrix(my.coef))
     my.coef.df$name <- row.names(my.coef)
     row.names(my.coef.df) <- NULL
-    
+   
+    # Save a report summarizing the results 
     sink(sprintf("results/models/%s.txt", name))
     cat("EPIBIOS Rodent PTE Classification Report\n")
     cat("\n")
@@ -207,10 +275,12 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
     cat("End\n")
     sink()
 
+    # Identify the non-zero coefficients
     my.metrics <- my.coef.df[which(my.coef.df$s0 != 0),"name"]
     my.metrics <- my.metrics[c(-1)] # remove the intercept
     sub.out.df <- NULL
     
+    # Summarize group differences at the level of individual parameters
     for (metric in my.metrics) 
     {
       my.df <- data.frame(df)
@@ -241,7 +311,8 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
       out$stde  <- my.coef[2, 2]
       out$tval  <- my.coef[2, 3]
       out$pval  <- my.coef[2, 4]
-     
+    
+      # Only make plots if there was some effect 
       if (out$pval < 0.01) 
       {
 				myplot <- ggplot(data=my.df, aes(x=status, y=value, color=site))
@@ -266,48 +337,36 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
   })
 }
 
-dir.create("results/models", showWarnings=FALSE, recursive=T)
-dir.create("results/plots", showWarnings=FALSE, recursive=T)
-dir.create("results/stats", showWarnings=FALSE, recursive=T)
+# Run the analysis for specific imaging parameters, sites, and timepoints.  
 
-# my.params <- NULL
-# my.params <- c(my.params, "native.tract.bundles.dwi.harm.zscore.map.dti_FA_mean")
-# my.params <- c(my.params, "native.tract.bundles.dwi.harm.zscore.map.dti_AD_mean")
-# my.params <- c(my.params, "native.tract.bundles.dwi.harm.zscore.map.dti_RD_mean")
-# my.params <- c(my.params, "native.tract.bundles.map.density_mean")
-# my.params <- c(my.params, "native.mge.lesion.stats")
-# 
-# my.tps <- c("2d", "9d", "30d", "5mo", "diff_9d_2d", "diff_30d_9d")
-# my.sites <- c("Finland", "UCLA", "Melbourne")
-
-
+# The vector of parameters (matching the table basenames)
 my.params <- NULL
-
-# my.params <- c(my.params, "atlas.dwi.lesion.stats")
-# my.params <- c(my.params, "atlas.mge.lesion.stats")
-
+my.params <- c(my.params, "atlas.dwi.lesion.stats")
+my.params <- c(my.params, "atlas.mge.lesion.stats")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.map.density_mean")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.map.volume")
-# my.params <- c(my.params, "native.dwi.tract.bundles.tissue.map.length_mean")
-# my.params <- c(my.params, "native.dwi.tract.bundles.tissue.map.mag_mean")
-# my.params <- c(my.params, "native.dwi.tract.bundles.tissue.map.num_tissue")
- 
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.fit.map.dti_FA_mean")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean")
 
-# my.tps <- c("2d", "9d", "30d", "5mo", "diff_9d_2d", "diff_30d_2d", "diff_5mo_2d", "diff_30d_9d", "diff_5mo_9d", "diff_5mo_30d")
+# The vector of timepoints (differences are also supported) 
 my.tps <- c("2d", "9d", "30d", "5mo")
+
+# The vector of imaging sites
 my.sites <- c("Finland-P1", "Melbourne-P1", "UCLA-P1")
 
+# Look at all combinations of parameters, timepoints, and sites
 for (my.param in my.params) 
 { 
   for (my.tp in my.tps)
   {
     for (my.site in my.sites)
     {
+      # Run the PTE vs TBI classification analysis
       epibios.classify(c(my.param), c(my.site), my.tp, tbi=FALSE)
+
+      # Run the Sham vs TBI classification analysis
       epibios.classify(c(my.param), c(my.site), my.tp, tbi=TRUE)
     }
   }
