@@ -1,10 +1,20 @@
 #! /usr/bin/env Rscript 
+################################################################################
+#
+# EPIBIOS PTE Classification Analysis
+#
+# Author: Ryan Cabeen and the EPIBIOS Rodent MRI Team
+#  
+################################################################################
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args)==0) 
 {
   stop("usage: Rscript run.sh <tables_dir>", call.=FALSE)
 } 
+
+# This is the directory to where you have the data tables saved
+root <- args[1]
 
 library(ggplot2)
 library(purrr)
@@ -14,9 +24,11 @@ library(glmnet)
 library(caret)
 library(dplyr)
 
-# This is the directory to where you have the data tables saved
-root <- args[1]
+################################################################################
+# Functions 
+################################################################################
 
+################################################################################
 #
 #  This function reads a collection of parameters from one or many sites
 # 
@@ -27,6 +39,7 @@ root <- args[1]
 #  Output:
 #    a list that contains a data frame and a list of imaging parameters 
 #
+################################################################################
 epibios.read.table <- function(params, sites)
 {
   # A vector to store the imaging metrics variable names
@@ -140,6 +153,7 @@ epibios.read.table <- function(params, sites)
   return(list(df=out.df, metrics=out.metrics))
 }
 
+################################################################################
 #
 #  This function runs a classification analysis for a collection of 
 #  parameters from one or many sites
@@ -155,6 +169,7 @@ epibios.read.table <- function(params, sites)
 #  Output:
 #    none, but it will produce outputs in the the results directory
 #
+################################################################################
 epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
 {
 	dir.create("results/models", showWarnings=FALSE, recursive=T)
@@ -337,9 +352,17 @@ epibios.classify <- function(params, sites, time, tbi=FALSE, alpha=0.5)
   })
 }
 
-# Run the analysis for specific imaging parameters, sites, and timepoints.  
+################################################################################
+# Main 
+#
+# The code below runs the analysis for specific imaging parameters, sites, 
+# and timepoints.  This represents a subset of what is possible to run, please
+# see the data tables and code above to see what other parameters and 
+# timepoints (or differences between timepoints) can be used. 
+#
+################################################################################
 
-# The vector of parameters (matching the table basenames)
+# Define the vector of parameters (matching the table basenames)
 my.params <- NULL
 my.params <- c(my.params, "atlas.dwi.lesion.stats")
 my.params <- c(my.params, "atlas.mge.lesion.stats")
@@ -350,10 +373,10 @@ my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.harm.map.dti_FA_mean")
 my.params <- c(my.params, "native.dwi.tract.bundles.tissue.whole.voxel.harmz.map.dti_FA_mean")
 
-# The vector of timepoints (differences are also supported) 
+# Define the vector of timepoints (differences are also supported) 
 my.tps <- c("2d", "9d", "30d", "5mo")
 
-# The vector of imaging sites
+# Define the vector of imaging sites
 my.sites <- c("Finland-P1", "Melbourne-P1", "UCLA-P1")
 
 # Look at all combinations of parameters, timepoints, and sites
@@ -371,3 +394,7 @@ for (my.param in my.params)
     }
   }
 }
+
+################################################################################
+# END
+################################################################################
