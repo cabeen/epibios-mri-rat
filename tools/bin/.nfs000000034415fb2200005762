@@ -1,9 +1,0 @@
-#! /bin/bash
-
-cd /ifs/loni/postdocs/rcabeen/collab/epibios/rat-project1
-
-for c in cases/sources/*/*; do
-/ifs/loni/postdocs/rcabeen/collab/epibios/rat-common/tools/repo/tools/bin/EpibiosMainProcess.sh \
-  /ifs/loni/postdocs/rcabeen/collab/epibios/rat-common/stats ${c} \
-  $(echo ${c} | sed 's/sources/process/g')
-done
