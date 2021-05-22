@@ -14,7 +14,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 name=$(basename $0)
 
 if [ $# -ne "2" ]; then
-    echo "Usage: ${name} <input_dir> <output_dir>"
+    echo "Usage: ${name} <input_agilent_dir> <output_nifti_dir>"
     exit
 fi
 
@@ -28,14 +28,55 @@ echo "  using output: ${output}"
 tmp=${output}.tmp.${RANDOM}
 mkdir -p ${tmp}
 
-dcm2niix -z y -o ${tmp} raw/MGRE-*dmc
-dcm2niix -z y -o ${tmp} raw/FSE-*dmc
+# Note: these are all the consistent directories:
+# FSE-EPIBIOX_091620_01.dmc
+# FSE-EPIBIOX_070820_01.dmc
+# MGRE-EPIBIOS-072120_01.dmc
+# MGRE-EPIBIOS-072120_03.dmc
+# epidti3D_b1000_gauss_1nx_2sh_01.fid
+# epidti3D_b1000_SGLgauss_1nx_2sh_01.fid
+# epidti3D_b1000_SGLgauss_1nx_2sh_02.fid
+# epidti3D_b2800_gauss_1nx_2sh_01.fid
+# epidti3D_b2800_SGLgauss_1nx_2sh_01.fid
 
-cp raw/epidti3D_b1000_*/image_mag.nii ${tmp}/dwi.b1000.nii
-gzip ${tmp}/dwi.b1000.nii
+for d in MGRE-EPIBIOS-072120_01.dmc MGRE-EPIBIOS-072120_03.dmc \
+         FSE-EPIBIOX_091620_01.dmc FSE-EPIBIOX_070820_01.dmc; do
+  if [ -e ${input}/${d} ]; then
+    dcm2niix -z y -o ${tmp} ${input}/${d}
+  fi
+done
 
-cp raw/epidti3D_b2800_*/image_mag.nii ${tmp}/dwi.b2800.nii
-gzip ${tmp}/dwi.b2800.nii
+for b in 1000 2800; do
+  if [ -e $(echo ${input}/epidti3D_b${b}_* | awk '{print $1}') ]; then
+    cp ${input}/epidti3D_b${b}_*/image_mag.nii ${tmp}/dwi.b${b}.nii
+    gzip ${tmp}/dwi.b${b}.nii
+  fi
+done
+
+chmod ug+rwx ${tmp}/*
+
+for f in ${tmp}/FSE*.nii.gz; do
+  qit --verbose --debug VolumeReorder \
+    --swapjk \
+    --input ${f} --output ${f}
+done
+
+for f in ${tmp}/MGRE*.nii.gz; do
+  qit --verbose --debug VolumeReorder \
+    --flipj --swapjk \
+    --input ${f} --output ${f}
+done
+
+for f in ${tmp}/dwi*.nii.gz; do
+  qit --verbose --debug VolumeReorder \
+    --flipi --flipk --swapij \
+    --input ${f} --output ${f}
+done
+
+for f in ${tmp}/*nii.gz; do
+  qit --verbose --debug VolumeStandardize \
+    --input ${f} --output ${f}
+done
 
 log=${tmp}/log.txt
 echo "EPIBIOS import log" > ${log}
