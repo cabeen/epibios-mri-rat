@@ -36,11 +36,11 @@ for dir in ${input}/*; do
     log=${tmp}/log.txt
 
     mkdir -p ${tmp}
-    python3 ${ROOT}/EpibiosBrukerParse.py \
+    python3 ${ROOT}/EpibiosAuxBrukerParse.py \
       ${dir}/method \
       --write-header ${tmp}/header.json \
       --write-param ${tmp}/param.json
-    scan=$(python3 ${ROOT}/EpibiosBrukerIdentify.py ${tmp}/param.json)
+    scan=$(python3 ${ROOT}/EpibiosAuxBrukerIdentify.py ${tmp}/param.json)
     outdir=${output}/${scan}
       
     echo "EPIBIOS import log" > ${log}
@@ -54,7 +54,7 @@ for dir in ${input}/*; do
 
     if [[ ! -e ${outdir} ]] || [[ $(diff ${outdir}/header.json ${tmp}/header.json) ]]; then
 
-      ${ROOT}/../../share/Bru2Nii/Bru2 -v -z -o ${tmp}/data ${dir} >> ${log} 
+      Bru2 -v -z -o ${tmp}/data ${dir} >> ${log} 
       echo "   ...... creating scan ${scan} from subdirectory $(basename ${dir})"
 
       if [ -e ${outdir} ]; then

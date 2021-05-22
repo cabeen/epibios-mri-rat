@@ -32,13 +32,13 @@ echo "  using source: ${source}"
 echo "  using site: ${site}"
 echo "  using subject: ${subject}"
 
+scanner=Bruker
 if [ ${site} == "Einstein-P2" ]; then 
-	bash ${root}/bin/EpibiosAuxAgilentImport.sh ${source} ${subject}/native.source/convert
-	bash ${root}/bin/EpibiosAuxAgilentCommon.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
-else
-	bash ${root}/bin/EpibiosAuxBrukerImport.sh ${source} ${subject}/native.source/convert
-	bash ${root}/bin/EpibiosAuxBrukerCommon.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
+  scanner=Agilent
 fi
+
+bash ${root}/bin/EpibiosAux${scanner}Import.sh ${source} ${subject}/native.source/convert
+bash ${root}/bin/EpibiosAux${scanner}Common.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
 
 echo "finished"
 

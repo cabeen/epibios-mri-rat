@@ -10,7 +10,6 @@
 ##############################################################################
 
 workflow=$(cd $(dirname ${0}); cd ..; pwd -P)
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && cd ../../.. && pwd )/data"
 
 name=$(basename $0)
 
@@ -38,6 +37,7 @@ dwi=DWI_46
 mge=MGE
 mtlow=FLASH_No_On
 mthigh=FLASH_Yes_On
+rare=RARE
 
 if [ ${site} == "Melbourne" ]; then
 	mtlow=FLASH_Yes_On
@@ -47,6 +47,22 @@ fi
 params=${workflow}/params/${site}
 
 mkdir -p ${output}
+
+if [ ! -e ${output}/rare ]; then
+	if [ -e ${input}/${rare}/data.nii.gz ]; then
+		ln ${input}/${rare}/data.nii.gz ${output}/rare.nii.gz
+	else
+		repeats=${input}/${rare}.repeat.*/data.nii.gz
+		files=( $repeats )
+		repeat=${files[0]}
+		if [ -e ${repeat} ]; then
+			ln ${files[0]} ${output}/rare.nii.gz
+		else
+			echo "rare missing for ${site} ${sid}"
+			touch ${output}/rare.missing
+		fi
+	fi
+fi
 
 if [ ! -e ${output}/dwi.nii.gz ]; then
 	if [ -e ${input}/${dwi}/data.nii.gz ]; then
