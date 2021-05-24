@@ -1,14 +1,10 @@
 ################################################################################
 #
-# Level 5 Analysis for EPIBIOS
+# Makefile for main EPIBIOS processing pipeline
 #
 # Author: Ryan Cabeen
 #
 ################################################################################
-
-ifndef INPUT
-$(error INPUT is required)
-endif
 
 ifndef STATS 
 $(error STATS is required)
@@ -335,8 +331,6 @@ along.voxel.ms = $(QIT_CMD) CurvesMeasureAlongBatch \
 # Parameter Estimation - DWI 
 ##############################################################################
 
-$(NT_SOURCE): $(INPUT)
-	bash $(ROOT)/bin/EpibiosAuxConvert.sh $(INPUT) $@
 $(NT_SOURCE)/common/dwi.bvecs.txt: $(NT_SOURCE)
 $(NT_SOURCE)/common/dwi.bvals.txt: $(NT_SOURCE)
 $(NT_SOURCE)/common/dwi.nii.gz: $(NT_SOURCE)
@@ -366,10 +360,10 @@ $(NT_DWI_RAW): $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --output $@
 
 $(NT_DWI_NLM): $(NT_DWI_RAW)
-	bash $(ROOT)/bin/EpibiosDenoise.sh $(word 1, $+) $@
+	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
 
 $(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
-	bash $(ROOT)/bin/EpibiosDwiCorrect.sh $+ $@
+	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
 
 $(NT_DWI_QA): $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
 	$(QIT_CMD) VolumeDifferenceMap \
@@ -450,7 +444,7 @@ $(NT_MGE_MEAN_RAW): $(NT_MGE_RAW)
     --output $@
 
 $(NT_MGE_NLM): $(NT_MGE_RAW)
-	bash $(ROOT)/bin/EpibiosDenoise.sh $(word 1, $+) $@
+	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
 
 $(NT_MGE_QA): $(NT_MGE_RAW) $(NT_MGE_NLM)
 	$(QIT_CMD) VolumeDifferenceMap \
@@ -487,7 +481,7 @@ $(NT_MGE_MEAN): $(NT_MGE_NLM)
 $(NT_MGE_BIASED): $(NT_MGE_MEAN)
 
 $(NT_MGE_MASK): $(NT_MGE_BIASED)
-	$(ROOT)/bin/EpibiosSkullStrip.sh $(word 1, $+) $@
+	$(ROOT)/bin/EpibiosAuxSkullStrip.sh $(word 1, $+) $@
 
 ##############################################################################
 # Parameter Estimation - MTR
@@ -519,15 +513,15 @@ $(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
 
 $(NT_MTR_LOW_NLM): $(NT_MTR_LOW_RAW)
 	-mkdir -p $(dir $@)
-	bash $(ROOT)/bin/EpibiosDenoise.sh $(word 1, $+) $@
+	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
 
 $(NT_MTR_HIGH_NLM): $(NT_MTR_HIGH_RAW)
 	-mkdir -p $(dir $@)
-	bash $(ROOT)/bin/EpibiosDenoise.sh $(word 1, $+) $@
+	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
 
 $(NT_MTR_MASK): $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)
-	$(ROOT)/bin/EpibiosSkullStrip.sh $(word 1, $+) $@
+	$(ROOT)/bin/EpibiosAuxSkullStrip.sh $(word 1, $+) $@
 
 $(NT_MTR_RATIO): $(NT_MTR_LOW_NLM) $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)

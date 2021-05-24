@@ -5,8 +5,8 @@
 #
 #   A script for converting scanner data to nifti for the EPIBIOS project.
 #
-#     source: a Bruker MRI directory
-#     subject: a destination nifti directory
+#     input: a Bruker MRI directory
+#     output: a destination nifti directory
 #
 # Author: Ryan Cabeen
 #
@@ -16,29 +16,31 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
 name=$(basename $0)
 
 if [ $# -ne "2" ]; then
-    echo "Usage: ${name} <source> <subject>"
+    echo "Usage: ${name} <input> <output>"
     exit
 fi
 
-source=${1}
-subject=${2}
+input=${1}
+output=${2}
 
-site=$(basename $(dirname ${source}))
+site=$(basename $(dirname ${input}))
 
-mkdir -p ${subject}
+mkdir -p ${output}
 
 echo "started ${name}"
-echo "  using source: ${source}"
+echo "  using input: ${input}"
 echo "  using site: ${site}"
-echo "  using subject: ${subject}"
+echo "  using output: ${output}"
 
 scanner=Bruker
 if [ ${site} == "Einstein-P2" ]; then 
   scanner=Agilent
 fi
 
-bash ${root}/bin/EpibiosAux${scanner}Import.sh ${source} ${subject}/native.source/convert
-bash ${root}/bin/EpibiosAux${scanner}Common.sh ${subject}/native.source/convert ${site} ${subject}/native.source/common
+bash ${root}/bin/EpibiosAux${scanner}Import.sh ${input} ${output}/convert
+bash ${root}/bin/EpibiosAux${scanner}Common.sh ${output}/native.input/convert ${site} ${output}/common
+echo ${site} > ${output}/common/site.txt
+echo $(basename ${input}) > ${output}/common/sid.txt
 
 echo "finished"
 

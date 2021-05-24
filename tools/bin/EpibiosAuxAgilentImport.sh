@@ -46,12 +46,15 @@ for d in MGRE-EPIBIOS-072120_01.dmc MGRE-EPIBIOS-072120_03.dmc \
   fi
 done
 
-for b in 1000 2800; do
-  if [ -e $(echo ${input}/epidti3D_b${b}_* | awk '{print $1}') ]; then
-    cp ${input}/epidti3D_b${b}_*/image_mag.nii ${tmp}/dwi.b${b}.nii
-    gzip ${tmp}/dwi.b${b}.nii
-  fi
-done
+if [ -e $(echo ${input}/epidti3D_b1000_* | awk '{print $1}') ]; then
+  cp ${input}/epidti3D_b1000_*/image_mag.nii ${tmp}/dwi.low.nii
+  gzip ${tmp}/dwi.low.nii
+fi
+
+if [ -e $(echo ${input}/epidti3D_b2800_* | awk '{print $1}') ]; then
+  cp ${input}/epidti3D_b2800_*/image_mag.nii ${tmp}/dwi.high.nii
+  gzip ${tmp}/dwi.high.nii
+fi
 
 chmod ug+rwx ${tmp}/*
 
@@ -76,6 +79,11 @@ done
 for f in ${tmp}/*nii.gz; do
   qit --verbose --debug VolumeStandardize \
     --input ${f} --output ${f}
+
+  # the Bruker conversion scales the voxel size
+  # by a factor of ten, so let's do the same here
+  qit --verbose --debug VolumeSetGrid \
+    --df 10 --input ${f} --output ${f}
 done
 
 log=${tmp}/log.txt

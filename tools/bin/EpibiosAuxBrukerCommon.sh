@@ -34,6 +34,7 @@ sid=$(basename ${input})
 echo "... processing subject ${sid} from ${site}"
 
 dwi=DWI_46
+dwilow=DWI_23
 mge=MGE
 mtlow=FLASH_No_On
 mthigh=FLASH_Yes_On
@@ -81,6 +82,21 @@ if [ ! -e ${output}/dwi.nii.gz ]; then
 
 	ln ${params}/bvals.txt ${output}/dwi.bvals.txt 
 	ln ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
+fi
+
+if [ ! -e ${output}/dwi.multi.nii.gz ]; then
+	if [ -e ${input}/${dwi}/data.nii.gz ] && [ -e ${input}/${dwilow}/data.nii.gz ]; then
+    qit --verbose VolumeCat \
+      --input ${input}/${dwilow}/data.nii.gz \
+      --cat ${input}/${dwi}/data.nii.gz \
+      --output ${output}/dwi.multi.nii.gz
+	else
+    echo "dwi missing for ${site} ${sid}"
+    touch ${output}/dwi.multi.missing
+	fi
+
+	cp ${params}/multi.bvals.txt ${output}/dwi.multi.bvals.txt 
+	cp ${params}/multi.bvecs.txt ${output}/dwi.multi.bvecs.txt 
 fi
 
 if [ ! -e ${output}/mge.nii.gz ]; then

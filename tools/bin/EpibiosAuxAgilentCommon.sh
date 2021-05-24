@@ -42,14 +42,21 @@ qit --verbose VolumeFuse --skip \
 
 cp $(echo ${input}/FSE*.nii.gz | awk '{print $1}') ${tmp}/rare.nii.gz
 
+cp ${input}/dwi.high.nii.gz ${tmp}/dwi.nii.gz
+
 qit --verbose VolumeCat \
-  --input ${input}/dwi.b1000.nii.gz \
-  --cat ${input}/dwi.b2800.nii.gz \
-  --output ${tmp}/dwi.nii.gz
+  --input ${input}/dwi.low.nii.gz \
+  --cat ${input}/dwi.high.nii.gz \
+  --output ${tmp}/dwi.multi.nii.gz
 
 cp ${params}/bvals.txt ${tmp}/dwi.bvals.txt 
 cp ${params}/bvecs.txt ${tmp}/dwi.bvecs.txt 
+cp ${params}/multi.bvals.txt ${tmp}/dwi.multi.bvals.txt 
+cp ${params}/multi.bvecs.txt ${tmp}/dwi.multi.bvecs.txt 
 cp ${params}/te.txt ${tmp}/mge.te.txt 
+
+touch ${tmp}/mt.high.missing
+touch ${tmp}/mt.low.missing
 
 if [ -e ${output} ]; then
   bck=${output}.bck.${RANDOM}
