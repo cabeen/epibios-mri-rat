@@ -77,7 +77,8 @@ if [ ! -e ${case}/native.source ]; then
   if [ ! -e ${input} ]; then
     echo "error, invalid input: ${input}"; exit 1
   fi
-  bash ${root}/bin/EpibiosAuxConvert.sh ${input} ${case}
+
+  bash ${root}/EpibiosAuxConvert.sh ${input} ${case}/native.source
 fi
 
 mkdir -p ${case}
@@ -88,3 +89,4 @@ echo "finished"
 ################################################################################
 # END
 ################################################################################
+
