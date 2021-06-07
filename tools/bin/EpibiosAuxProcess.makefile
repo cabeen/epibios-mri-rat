@@ -387,14 +387,14 @@ $(NT_DWI_BVECS): $(NT_DWI_EDDY)
 
 $(NT_DWI_ALL_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) 
 	$(QIT_CMD) VolumeTensorFit \
-    --method WLLS \
+    --method LLS \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
     --output $@
 
 $(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeTensorFit \
-    --method WLLS \
+    --method FWWLLS \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
     --mask $(word 4, $+) \

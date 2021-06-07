@@ -66,37 +66,33 @@ if [ ! -e ${output}/rare ]; then
 fi
 
 if [ ! -e ${output}/dwi.nii.gz ]; then
-	if [ -e ${input}/${dwi}/data.nii.gz ]; then
-		ln ${input}/${dwi}/data.nii.gz ${output}/dwi.nii.gz
-	else
-		repeats=${input}/${dwi}.repeat.*/data.nii.gz
-		files=( $repeats )
-		repeat=${files[0]}
-		if [ -e ${repeat} ]; then
-			ln ${files[0]} ${output}/dwi.nii.gz
-		else
-			echo "dwi missing for ${site} ${sid}"
-			touch ${output}/dwi.missing
-		fi
-	fi
-
-	ln ${params}/bvals.txt ${output}/dwi.bvals.txt 
-	ln ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
-fi
-
-if [ ! -e ${output}/dwi.multi.nii.gz ]; then
 	if [ -e ${input}/${dwi}/data.nii.gz ] && [ -e ${input}/${dwilow}/data.nii.gz ]; then
     qit --verbose VolumeCat \
       --input ${input}/${dwilow}/data.nii.gz \
       --cat ${input}/${dwi}/data.nii.gz \
-      --output ${output}/dwi.multi.nii.gz
-	else
-    echo "dwi missing for ${site} ${sid}"
-    touch ${output}/dwi.multi.missing
-	fi
+      --output ${output}/dwi.nii.gz
 
-	cp ${params}/multi.bvals.txt ${output}/dwi.multi.bvals.txt 
-	cp ${params}/multi.bvecs.txt ${output}/dwi.multi.bvecs.txt 
+    cp ${params}/multi.bvals.txt ${output}/dwi.bvals.txt 
+    cp ${params}/multi.bvecs.txt ${output}/dwi.bvecs.txt 
+  else
+    if [ -e ${input}/${dwi}/data.nii.gz ]; then
+      ln ${input}/${dwi}/data.nii.gz ${output}/dwi.nii.gz
+      cp ${params}/bvals.txt ${output}/dwi.bvals.txt 
+      cp ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
+    else
+      repeats=${input}/${dwi}.repeat.*/data.nii.gz
+      files=( $repeats )
+      repeat=${files[0]}
+      if [ -e ${repeat} ]; then
+        ln ${files[0]} ${output}/dwi.nii.gz
+        cp ${params}/bvals.txt ${output}/dwi.bvals.txt 
+        cp ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
+      else
+        echo "dwi missing for ${site} ${sid}"
+        touch ${output}/dwi.missing
+      fi
+    fi
+	fi
 fi
 
 if [ ! -e ${output}/mge.nii.gz ]; then

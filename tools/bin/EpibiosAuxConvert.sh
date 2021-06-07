@@ -33,12 +33,12 @@ echo "  using site: ${site}"
 echo "  using output: ${output}"
 
 scanner=Bruker
-if [ ${site} == "Einstein-P2" ]; then 
+if [ ${site} == "Einstein-P2" ] || [ ${site} == "Einstein-Exvivo-P2" ]; then 
   scanner=Agilent
 fi
 
 bash ${root}/bin/EpibiosAux${scanner}Import.sh ${input} ${output}/convert
-bash ${root}/bin/EpibiosAux${scanner}Common.sh ${output}/native.input/convert ${site} ${output}/common
+bash ${root}/bin/EpibiosAux${scanner}Common.sh ${output}/convert ${site} ${output}/common
 echo ${site} > ${output}/common/site.txt
 echo $(basename ${input}) > ${output}/common/sid.txt
 
