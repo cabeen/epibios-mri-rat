@@ -1,0 +1,15 @@
+Rodent Meeting 7/6/2021
+Staffing:
+LONI Team: Sweta (full-time), Aubrey (50%), Akul (50%), Rachael (20%), Ryan (contributing)
+UEF: Eppu (50% starting in Sept), Ueli (??) Olli (consult), Asla (consult)
+Melbourne: no one who can do data analysis
+UCLA: Cesar (mostly EEG now, no one on MRI), David (consult), Neil (consult)
+Analysis Strategies
+LONI: all 3 sites data analysis
+UEF: only UEF data (more hypothesis-driven)
+Papers: (aim for high IF, first multi-site preclinical model)
+methodology pipeline paper - Ryan (lead)
+lesion characterization across sites paper - Rachael (lead), Ryan (methodology), Riikka and Asla (biology consult)
+how to harmonize MRI studies for large preclinical studies (what are the issues, how to tackle challenges)  - Sweta (lead)
+cortical thickness  - Aubrey/Sweta
+Follow-up on 7/21 with Asla, Riikka, Dominique, Aubrey, Sweta, Dominique & Rachael to discuss lesion and cortical thickness (edited) 
