@@ -52,19 +52,25 @@ for dir in ${input}/*; do
     echo "" >> ${log}
     echo "  bru2nii output: " >> ${log}
 
-    if [[ ! -e ${outdir} ]] || [[ $(diff ${outdir}/header.json ${tmp}/header.json) ]]; then
+    Bru2 -v -z -o ${tmp}/data ${dir} >> ${log} 
+    echo "   ...... creating scan ${scan} from subdirectory $(basename ${dir})"
 
-      Bru2 -v -z -o ${tmp}/data ${dir} >> ${log} 
-      echo "   ...... creating scan ${scan} from subdirectory $(basename ${dir})"
-
-      if [ -e ${outdir} ]; then
-        echo "[warning] found repeat scan results, backing them up"
-        mv ${outdir} ${outdir}.repeat.${RANDOM}
-      fi
-
-      mv ${tmp} ${outdir}
+    if [ ! -e ${tmp}/data.nii.gz ]; then
+      nout=${outdir}-missing-${RANDOM}
+      echo "   ...... [warning] found no image data, moving to ${nout}"
+      mv ${tmp} ${nout}
     else
-      rm -rf ${tmp}
+      if [[ ! -e ${outdir} ]] ; then
+        echo "   ...... saving result to ${outdir}"
+        mv ${tmp} ${outdir}
+      elif [[ $(diff ${outdir}/header.json ${tmp}/header.json) ]]; then
+        nout=${outdir}-extra-${RANDOM}
+        echo "   ...... [warning] found extra image data, moving to ${nout}"
+        mv ${tmp} ${nout}
+      else
+        echo "   ...... [warning] found duplicate data, skipping it"
+        rm -rf ${tmp}
+      fi
     fi
   fi
 done
