@@ -689,7 +689,7 @@ $(AT_DWI_FIT): $(NT_DWI_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -715,7 +715,7 @@ $(AT_DWI_HARM): $(NT_DWI_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
   	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -745,7 +745,7 @@ $(AT_DWI_FITZ): $(AT_DWI_FIT)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
@@ -771,7 +771,7 @@ $(NT_DWI_FITZ): $(AT_DWI_FITZ) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -797,7 +797,7 @@ $(AT_DWI_HARMZ): $(AT_DWI_HARM)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
@@ -823,7 +823,7 @@ $(NT_DWI_HARMZ): $(AT_DWI_HARMZ) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -854,7 +854,7 @@ $(AT_DWI_FIT_TBSS): $(AT_DWI_FIT)
 	$(foreach m,dti_S0 dti_FA dti_MD dti_RD dti_AD,\
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 ifneq ($(MULTI),)
-	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	$(foreach m,noddi_ficvf noddi_odi noddi_fiso, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
@@ -868,7 +868,7 @@ $(AT_DWI_HARM_TBSS): $(AT_DWI_HARM)
 	$(foreach m,dti_S0 dti_FA dti_MD dti_RD dti_AD,\
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 ifneq ($(MULTI),)
-	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	$(foreach m,noddi_ficvf noddi_odi noddi_fiso, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
@@ -882,7 +882,7 @@ $(AT_DWI_FITZ_TBSS): $(AT_DWI_FITZ)
 	$(foreach m,dti_S0 dti_FA dti_MD dti_RD dti_AD,\
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 ifneq ($(MULTI),)
-	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	$(foreach m,noddi_ficvf noddi_odi noddi_fiso, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
@@ -896,7 +896,7 @@ $(AT_DWI_HARMZ_TBSS): $(AT_DWI_HARMZ)
 	$(foreach m,dti_S0 dti_FA dti_MD dti_RD dti_AD,\
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 ifneq ($(MULTI),)
-	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	$(foreach m,noddi_ficvf noddi_odi noddi_fiso, \
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
@@ -1369,7 +1369,7 @@ $(MY_REGIONS).dwi.$(MY_PARAM).map: $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_MASK)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
@@ -1398,7 +1398,7 @@ $(MY_REGIONS).dwi.tbss.$(MY_PARAM).map: $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_M
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
@@ -1498,7 +1498,7 @@ $(MY_IN).$(MY_BUNDLE).$(MY_TYPE).$(MY_PARAM).map: $(MY_IN).txt $(MY_LIST) $(MY_S
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call $(MY_TYPE).ms,$(MY_IN),$(MY_LIST),$(MY_SOURCE),$(p),$(p),$$@.$$(TMP),$(MY_BUNDLE)))
 ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD, fwdti_FW, \
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
 	  $$(call $(MY_TYPE).ms,$(MY_IN),$(MY_LIST),$(MY_SOURCE),$(p),$(p),$$@.$$(TMP),$(MY_BUNDLE)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
 	  $$(call $(MY_TYPE).ms,$(MY_IN),$(MY_LIST),$(MY_SOURCE),$(p),$(p),$$@.$$(TMP),$(MY_BUNDLE)))
@@ -1570,7 +1570,7 @@ VIS_ANAT_TARS   += $(MY_ANAT)
 VIS_LESION_TARS += $(MY_LESION)
 endef
 
-$(foreach p,S0 FA MD, \
+$(foreach p,dti_S0 dti_FA dti_MD fwdti_FA fwdti_MD fwdti_FW noddi_ficvf noddi_odi noddi_fiso, \
   $(eval $(call vis,$(AT_DWI_HARM),dti_$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_dti_$(p))) \
   $(eval $(call vis,$(AT_DWI_HARM),dti_$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_dti_$(p))))
 
