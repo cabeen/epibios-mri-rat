@@ -588,16 +588,16 @@ $(NT_MTR_FIT): $(NT_MTR_RATIO) $(NT_MTR_MASK)
 	$(call vol.mask, $(word 1, $+), $(word 2, $+), $@.$(TMP)/mtr_ratio.nii.gz)
 	mv $@.$(TMP) $@
 
-$(NT_DWI_HARM): $(NT_DWI_BRAIN_MASK) $(NT_DWI_DTI) $(if $(MULTI), $(NT_DWI_FWDTI) $(NT_DWI_NODDI))
+$(NT_DWI_HARM): $(NT_DWI_BRAIN_MASK) $(NT_DWI_FIT)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call harmonize,$(word 2, $+),$(p),$(word 1, $+),$@.$(TMP)))
 ifneq ($(MULTI),)
-	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD dti_FW, \
-    $(call harmonize, $(word 3, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/fw$(p).nii.gz))
+	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
+    $(call harmonize,$(word 2, $+),$(p),$(word 1, $+),$@.$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
-    $(call harmonize, $(word 4, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/$(p).nii.gz))
+    $(call harmonize,$(word 2, $+),$(p),$(word 1, $+),$@.$(TMP)))
 endif
 	mv $@.$(TMP) $@
 
