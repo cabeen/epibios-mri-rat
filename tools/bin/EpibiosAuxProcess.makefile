@@ -1571,8 +1571,8 @@ VIS_LESION_TARS += $(MY_LESION)
 endef
 
 $(foreach p,dti_S0 dti_FA dti_MD fwdti_FA fwdti_MD fwdti_FW noddi_ficvf noddi_odi noddi_fiso, \
-  $(eval $(call vis,$(AT_DWI_HARM),dti_$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_dti_$(p))) \
-  $(eval $(call vis,$(AT_DWI_HARM),dti_$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_dti_$(p))))
+  $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
+  $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
 
 $(foreach p,mean r2star t2star, \
 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP),$(AT_MGE_VIS)/large_mge_$(p))) \
