@@ -22,6 +22,8 @@ Optional Input Data:
    --input <dn>: the path to the raw imaging data (Bruker or Agilent directory).
                  this is only required the first time you run the script.
 
+   --multi: enable multi-shell dwi processing
+
    --stats <dn>: the site-specific population statistical atlas
 
 Author: Ryan Cabeen
@@ -39,6 +41,7 @@ name=$(basename $0)
 case=$(pwd)
 input=
 stats=
+multi=""
 posit=""
 
 while [ "$1" != "" ]; do
@@ -46,19 +49,23 @@ while [ "$1" != "" ]; do
         --input)        shift; input=$1 ;;
         --stats)        shift; stats=$1 ;;
         --case)         shift; case=$1 ;;
+        --multi)        multi='MULTI=1' ;;
         --help )        usage ;;
         * )             posit="${posit} $1" ;;
     esac
     shift
 done
 
-if [ ${input} != "" ]; then
+if [ "${input}" != "" ]; then
   input=$(cd ${input} && pwd -P)
 fi
 
-if [ ${stats} != "" ]; then
+if [ "${stats}" != "" ]; then
   stats=$(cd ${stats} && pwd -P)
+else
+  stats=$(pwd)
 fi
+
 
 targets=${posit}
 
@@ -81,9 +88,13 @@ if [ ! -e ${case}/native.source ]; then
   bash ${root}/EpibiosAuxConvert.sh ${input} ${case}/native.source
 fi
 
-mkdir -p ${case}
-make -k -C ${case} -f ${makefile} STATS=${stats} ${posit}
+args="-k -C ${case} -f ${makefile} ${multi} STATS=${stats} ${posit}"
 
+mkdir -p ${case}
+echo "running: make ${args}"
+make ${args}
+
+ 
 echo "finished"
 
 ################################################################################
