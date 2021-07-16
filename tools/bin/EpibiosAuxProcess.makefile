@@ -29,11 +29,13 @@ QIT_CMD     := qit $(QIT_MEMORY) --verbose --debug
 TMP         := tmp.$(shell date +%s)
 BCK         := bck.$(shell date +%s)
 
-SITE        := $(shell basename $(dir $(dir $(shell pwd))))
+TIME        := $(shell basename $(dir $(dir $(shell pwd))))
+SITE        := $(shell basename $(dir $(dir $(dir $(shell pwd)))))
 
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
 $(info using stats: $(STATS))
+$(info using site: $(TIME))
 $(info using site: $(SITE))
 
 include $(ROOT)/params/$(SITE)/Makefile
@@ -97,6 +99,8 @@ AT_MTR             := atlas.mtr
 
 NT_RAW_BVECS       := native.dwi/source/raw.bvecs.txt
 NT_RAW_BVALS       := native.dwi/source/raw.bvals.txt
+NT_MATCH_BVECS     := native.dwi/source/match.bvecs.txt
+NT_MATCH_BVALS     := native.dwi/source/match.bvals.txt
 NT_DWI_BVECS       := native.dwi/source/dwi.bvecs.txt
 NT_DWI_BVALS       := native.dwi/source/dwi.bvals.txt
 
@@ -363,10 +367,36 @@ $(NT_DWI_RAW): $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --mean 1 \
     --output $@
 
+$(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
+	$(QIT_CMD) VolumeTensorFit \
+   --rounder 100 \
+   --shells 0,2800,2900,3000 \
+   --method LLS \
+   --input $(word 1, $+) \
+   --gradients $(word 2, $+) \
+   --output $@.dti
+	$(QIT_CMD) VolumeBrainExtract \
+    --input $@.dti \
+    --output $@.mask.nii.gz
+	$(QIT_CMD) VolumeThreshold \
+    --input $(word 1, $+)/dti_MD.nii.gz \
+    --mask $@.mask.nii.gz \
+    --threshold 0.0003 \
+    --output $@.mask.nii.gz
+	$(QIT_CMD) MaskFill \
+    --input $@.mask.nii.gz \
+    --output $@.masknii.gz
+	$(QIT_CMD) GradientsMatch \
+    --input $(word 2, $+) \
+    --dwi $(word 1, $+) \
+    --mask  $@.mask.nii.gz \
+    --output $@
+$(NT_MATCH_BVALS): $(NT_MATCH_BVECS)
+
 $(NT_DWI_NLM): $(NT_DWI_RAW)
 	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
 
-$(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
+$(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
 	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
 
 $(NT_DWI_QA): $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
@@ -391,6 +421,8 @@ $(NT_DWI_BVECS): $(NT_DWI_EDDY)
 
 $(NT_DWI_ALL_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) 
 	$(QIT_CMD) VolumeTensorFit \
+    --rounder 100 \
+    --shells 0,2800,2900,3000 \
     --method LLS \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
@@ -398,6 +430,8 @@ $(NT_DWI_ALL_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS)
 
 $(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeTensorFit \
+    --rounder 100 \
+    --shells 0,2800,2900,3000 \
     --method WLLS \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
