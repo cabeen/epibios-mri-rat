@@ -46,10 +46,10 @@ include $(ROOT)/params/$(SITE)/Makefile
 
 LESION_ERODE      ?= 3          # erode the lesion brain mask by this much 
 LESION_MINVOX     ?= 5          # the minimum num of contiguous lesion voxels
-HEME_S0_ZSCORE    ?= -3         # the DTI baseline abnormality of heme 
-CAVITY_MD_ZSCORE  ?= 5          # the DTI MD abnormality of cavity 
-HEME_T2S_ZSCORE   ?= -2         # the T2-star abnormality of heme
-CAVITY_T2S_ZSCORE ?= 3          # the T2-star abnormality of cavity
+HEME_DWI_ZSCORE    ?= -3         # the DTI baseline abnormality of heme 
+CAVITY_DWI_ZSCORE  ?= 5          # the DTI MD abnormality of cavity 
+HEME_MGE_ZSCORE   ?= -2         # the T2-star abnormality of heme
+CAVITY_MGE_ZSCORE ?= 3          # the T2-star abnormality of cavity
 PERILESION_LEVELS ?= 3,5,7,9    # the levels for perilesional analysis
 
 ROI_ERODE         ?= 1          # the erosion count for restricted ROI analysis
@@ -240,8 +240,7 @@ AT_REGIONS         :=
 AT_REGIONS         += harris.gray
 AT_REGIONS         += tissue.hemi
 
-AT_PRIOR           := $(STATS)/Lesion/mask.nii.gz
-AT_LESION_LUT      := $(STATS)/Lesion/rois.csv
+AT_LESION_MASK     := $(ROOT)/data/masks/lesion.nii.gz
 AT_BRAIN_MASK      := $(ROOT)/data/masks/brain.nii.gz
 AT_BRAIN_MGE       := $(ROOT)/data/reference/mge_mean.nii.gz
 AT_BRAIN_DTI       := $(ROOT)/data/models.dti/dti_S0.nii.gz
@@ -1277,7 +1276,7 @@ endef
 # Lesion Segmentation
 ##############################################################################
 
-$(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_PRIOR) $(AT_DWI_HARMZ)
+$(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_HARMZ)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1285,15 +1284,15 @@ $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_PRIOR) $(AT_DWI_HARMZ)
     --heme $(word 3, $+)/dti_S0.nii.gz \
     --cavity $(word 3, $+)/dti_MD.nii.gz \
     --erode $(LESION_ERODE) \
-    --zheme $(HEME_S0_ZSCORE) \
-    --zcavity $(CAVITY_MD_ZSCORE) \
+    --zheme $(HEME_DWI_ZSCORE) \
+    --zcavity $(CAVITY_DWI_ZSCORE) \
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
 $(AT_DWI_TISSUE_MASK): $(AT_DWI_LESION)
 $(AT_DWI_LESION_MASK): $(AT_DWI_LESION)
 
-$(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_PRIOR) $(AT_MGE_HARMZ)
+$(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_HARMZ)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1301,8 +1300,8 @@ $(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_PRIOR) $(AT_MGE_HARMZ)
     --heme $(word 3, $+)/mge_t2star.nii.gz \
     --cavity $(word 3, $+)/mge_t2star.nii.gz \
     --erode $(LESION_ERODE) \
-    --zheme $(HEME_T2S_ZSCORE) \
-    --zcavity $(CAVITY_T2S_ZSCORE) \
+    --zheme $(HEME_MGE_ZSCORE) \
+    --zcavity $(CAVITY_MGE_ZSCORE) \
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
@@ -1315,10 +1314,10 @@ $(NT_DWI_ATLAS_MASK): $(AT_BRAIN_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 $(NT_MGE_ATLAS_MASK): $(AT_BRAIN_MASK) $(NT_MGE_BRAIN_MASK) $(NT_TO_AT_MGE)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_DWI_PRIOR): $(AT_PRIOR) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_PRIOR): $(AT_LESION_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_MGE_PRIOR): $(AT_PRIOR) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_PRIOR): $(AT_LESION_MASK) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
 $(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_HARMZ)
@@ -1329,8 +1328,8 @@ $(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_HARMZ)
     --heme $(word 3, $+)/dti_S0.nii.gz \
     --cavity $(word 3, $+)/dti_MD.nii.gz \
     --erode $(LESION_ERODE) \
-    --zheme $(HEME_S0_ZSCORE) \
-    --zcavity $(CAVITY_MD_ZSCORE) \
+    --zheme $(HEME_DWI_ZSCORE) \
+    --zcavity $(CAVITY_DWI_ZSCORE) \
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
@@ -1345,8 +1344,8 @@ $(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_HARMZ)
     --heme $(word 3, $+)/mge_mean.nii.gz \
     --cavity $(word 3, $+)/mge_mean.nii.gz \
     --erode $(LESION_ERODE) \
-    --zheme $(HEME_T2S_ZSCORE) \
-    --zcavity $(CAVITY_T2S_ZSCORE) \
+    --zheme $(HEME_MGE_ZSCORE) \
+    --zcavity $(CAVITY_MGE_ZSCORE) \
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@

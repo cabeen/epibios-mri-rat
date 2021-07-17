@@ -1,8 +1,8 @@
 #! /bin/bash
 
-cd /ifs/loni/postdocs/rcabeen/collab/epibios/rat-project2/process
+cd /ifs/loni/postdocs/rcabeen/collab/epibios/rodent/process
 
-for s in *; do
+for s in */*; do
   echo; echo Site: ${s}
 
   for c in ${s}/*; do
