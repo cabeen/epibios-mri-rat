@@ -36,7 +36,7 @@ STATS       := $(ROOT)/data/param
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
 $(info using stats: $(STATS))
-$(info using site: $(TIME))
+$(info using time: $(TIME))
 $(info using site: $(SITE))
 
 include $(ROOT)/params/$(SITE)/pipe/Makefile

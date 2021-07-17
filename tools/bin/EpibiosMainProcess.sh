@@ -82,7 +82,6 @@ args="-k -C ${case} -f ${makefile} ${multi} ${posit}"
 mkdir -p ${case}
 echo "running: make ${args}"
 make ${args}
-
  
 echo "finished"
 
