@@ -19,12 +19,11 @@ Required Input Data:
 
 Optional Input Data:
 
-   --input <dn>: the path to the raw imaging data (Bruker or Agilent directory).
-                 this is only required the first time you run the script.
+   --source <dn>: the path to the raw imaging data (Bruker or Agilent 
+                  directory).  this is only required the first time 
+                  you run the script.
 
    --multi: enable multi-shell dwi processing
-
-   --stats <dn>: the site-specific population statistical atlas
 
 Author: Ryan Cabeen
 "
@@ -39,15 +38,13 @@ makefile=${root}/EpibiosAuxProcess.makefile
 name=$(basename $0)
 
 case=$(pwd)
-input=
-stats=
+source=
 multi=""
 posit=""
 
 while [ "$1" != "" ]; do
     case $1 in
-        --input)        shift; input=$1 ;;
-        --stats)        shift; stats=$1 ;;
+        --source)        shift; source=$1 ;;
         --case)         shift; case=$1 ;;
         --multi)        multi='MULTI=1' ;;
         --help )        usage ;;
@@ -56,16 +53,9 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ "${input}" != "" ]; then
-  input=$(cd ${input} && pwd -P)
+if [ "${source}" != "" ]; then
+  source=$(cd ${source} && pwd -P)
 fi
-
-if [ "${stats}" != "" ]; then
-  stats=$(cd ${stats} && pwd -P)
-else
-  stats=$(pwd)
-fi
-
 
 targets=${posit}
 
@@ -75,20 +65,19 @@ fi
 
 echo "started ${name}"
 echo "  using makefile: ${makefile}"
-echo "  using stats: ${stats}"
-echo "  using input: ${input}"
+echo "  using source: ${source}"
 echo "  using case: ${case}"
 echo "  using targets: ${targets}"
 
 if [ ! -e ${case}/native.source ]; then
-  if [ ! -e ${input} ]; then
-    echo "error, invalid input: ${input}"; exit 1
+  if [ ! -e ${source} ]; then
+    echo "error, invalid source: ${source}"; exit 1
   fi
 
-  bash ${root}/EpibiosAuxConvert.sh ${input} ${case}/native.source
+  bash ${root}/EpibiosAuxConvert.sh ${source} ${case}/native.source
 fi
 
-args="-k -C ${case} -f ${makefile} ${multi} STATS=${stats} ${posit}"
+args="-k -C ${case} -f ${makefile} ${multi} ${posit}"
 
 mkdir -p ${case}
 echo "running: make ${args}"
