@@ -6,9 +6,9 @@
 #
 ################################################################################
 
-ifndef STATS 
-$(error STATS is required)
-endif
+# ifndef STATS 
+# $(error STATS is required)
+# endif
 
 BIN   := $(dir $(abspath $(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST))))
 ROOT  ?= $(abspath $(BIN)/..)
@@ -31,6 +31,7 @@ BCK         := bck.$(shell date +%s)
 
 TIME        := $(shell basename $(dir $(dir $(shell pwd))))
 SITE        := $(shell basename $(dir $(dir $(dir $(shell pwd)))))
+STATS       := $(ROOT)/data/param
 
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
@@ -38,7 +39,7 @@ $(info using stats: $(STATS))
 $(info using site: $(TIME))
 $(info using site: $(SITE))
 
-include $(ROOT)/params/$(SITE)/Makefile
+include $(ROOT)/params/$(SITE)/pipe/Makefile
 
 ################################################################################
 # Parameters 
@@ -46,8 +47,8 @@ include $(ROOT)/params/$(SITE)/Makefile
 
 LESION_ERODE      ?= 3          # erode the lesion brain mask by this much 
 LESION_MINVOX     ?= 5          # the minimum num of contiguous lesion voxels
-HEME_DWI_ZSCORE    ?= -3         # the DTI baseline abnormality of heme 
-CAVITY_DWI_ZSCORE  ?= 5          # the DTI MD abnormality of cavity 
+HEME_DWI_ZSCORE   ?= -3         # the DTI baseline abnormality of heme 
+CAVITY_DWI_ZSCORE ?= 5          # the DTI MD abnormality of cavity 
 HEME_MGE_ZSCORE   ?= -2         # the T2-star abnormality of heme
 CAVITY_MGE_ZSCORE ?= 3          # the T2-star abnormality of cavity
 PERILESION_LEVELS ?= 3,5,7,9    # the levels for perilesional analysis
@@ -131,17 +132,14 @@ AT_DWI_XFIB        := atlas.dwi/model/fit.xfib
 NT_DWI_RESIDUAL    := native.dwi/model/residual
 
 NT_DWI_FIT         := native.dwi/param/fit
-NT_DWI_FITZ        := native.dwi/param/fitz
 NT_DWI_HARM        := native.dwi/param/harm
-NT_DWI_HARMZ       := native.dwi/param/harmz
+NT_DWI_NORM        := native.dwi/param/norm
 AT_DWI_FIT         := atlas.dwi/param/fit
-AT_DWI_FITZ        := atlas.dwi/param/fitz
 AT_DWI_HARM        := atlas.dwi/param/harm
-AT_DWI_HARMZ       := atlas.dwi/param/harmz
+AT_DWI_NORM        := atlas.dwi/param/norm
 AT_DWI_FIT_TBSS    := atlas.dwi/param/fit.tbss
-AT_DWI_FITZ_TBSS   := atlas.dwi/param/fitz.tbss
 AT_DWI_HARM_TBSS   := atlas.dwi/param/harm.tbss
-AT_DWI_HARMZ_TBSS  := atlas.dwi/param/harmz.tbss
+AT_DWI_NORM_TBSS   := atlas.dwi/param/norm.tbss
 
 NT_DWI_BRAIN_MASK  := native.dwi/mask/brain.nii.gz
 AT_DWI_BRAIN_MASK  := atlas.dwi/mask/brain.nii.gz
@@ -170,17 +168,14 @@ NT_MGE_MEAN        := native.mge/model/mge_mean.nii.gz
 NT_MGE_RESIDUAL    := native.mge/model/residual
 
 NT_MGE_FIT         := native.mge/param/fit
-NT_MGE_FITZ        := native.mge/param/fitz
 NT_MGE_HARM        := native.mge/param/harm
-NT_MGE_HARMZ       := native.mge/param/harmz
+NT_MGE_NORM        := native.mge/param/norm
 AT_MGE_FIT         := atlas.mge/param/fit
-AT_MGE_FITZ        := atlas.mge/param/fitz
 AT_MGE_HARM        := atlas.mge/param/harm
-AT_MGE_HARMZ       := atlas.mge/param/harmz
+AT_MGE_NORM        := atlas.mge/param/norm
 AT_MGE_FIT_TBSS    := atlas.mge/param/fit.tbss
-AT_MGE_FITZ_TBSS   := atlas.mge/param/fitz.tbss
 AT_MGE_HARM_TBSS   := atlas.mge/param/harm.tbss
-AT_MGE_HARMZ_TBSS  := atlas.mge/param/harmz.tbss
+AT_MGE_NORM_TBSS   := atlas.mge/param/norm.tbss
 
 AT_MGE_WARP        := atlas.mge/warp
 AT_TO_NT_MGE       := atlas.mge/warp/xfm.nii.gz
@@ -210,17 +205,14 @@ NT_MTR_RATIO       := native.mtr/model/mtr.nii.gz
 NT_MTR_RESIDUAL    := native.mtr/model/residual
 
 NT_MTR_FIT         := native.mtr/param/fit
-NT_MTR_FITZ        := native.mtr/param/fitz
 NT_MTR_HARM        := native.mtr/param/harm
-NT_MTR_HARMZ       := native.mtr/param/harmz
+NT_MTR_NORM        := native.mtr/param/norm
 AT_MTR_FIT         := atlas.mtr/param/fit
-AT_MTR_FITZ        := atlas.mtr/param/fitz
 AT_MTR_HARM        := atlas.mtr/param/harm
-AT_MTR_HARMZ       := atlas.mtr/param/harmz
+AT_MTR_NORM        := atlas.mtr/param/norm
 AT_MTR_FIT_TBSS    := atlas.mtr/param/fit.tbss
-AT_MTR_FITZ_TBSS   := atlas.mtr/param/fitz.tbss
 AT_MTR_HARM_TBSS   := atlas.mtr/param/harm.tbss
-AT_MTR_HARMZ_TBSS  := atlas.mtr/param/harmz.tbss
+AT_MTR_NORM_TBSS   := atlas.mtr/param/norm.tbss
 
 AT_MTR_WARP        := atlas.mtr/warp
 AT_TO_NT_MTR       := atlas.mtr/warp/xfm.nii.gz
@@ -282,12 +274,12 @@ harmonize = $(QIT_CMD) VolumeHarmonize \
               --output $(4)/$(2).nii.gz;
 
 zscore    = $(QIT_CMD) VolumeVoxelMathScalar \
-              --a $(2)/$(3).nii.gz \
-              --b $(STATS)/$(SITE)/control/$(3).$(1).mean.nii.gz \
-              --c $(STATS)/$(SITE)/control/$(3).$(1).std.nii.gz \
+              --a $(1)/$(2).nii.gz \
+              --b $(STATS)/$(2)_mean.nii.gz \
+              --c $(STATS)/$(2)_std.nii.gz \
               --mask $(ROOT)/data/masks/brain.nii.gz \
               --expression "(a - b) / c" \
-              --output $(4)/$(3).nii.gz;
+              --output $(3)/$(2).nii.gz;
 
 tbss      = $(FSLDIR)/bin/tbss_skeleton \
               -i $(ROOT)/data/models.dti/dti_FA.nii.gz \
@@ -772,85 +764,33 @@ $(AT_MTR_HARM): $(NT_MTR_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
 # Z-Scoring 
 ##############################################################################
 
-$(AT_DWI_FITZ): $(AT_DWI_FIT)
+$(AT_DWI_NORM): $(AT_DWI_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
-    $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
+    $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
-    $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
+    $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
-    $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
+    $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
 endif
 	mv $@.$(TMP) $@
 
-$(AT_MGE_FITZ): $(AT_MGE_FIT)
+$(AT_MGE_NORM): $(AT_MGE_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
-    $(call zscore,raw,$(word 1, $+),$(p),$@.$(TMP)))
+    $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_FITZ): $(AT_MTR_FIT)
+$(AT_MTR_NORM): $(AT_MTR_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
-	$(call zscore,raw,$(word 1, $+),mtr_ratio,$@.$(TMP))
+	$(call zscore,$(word 1, $+),mtr_ratio,$@.$(TMP))
 	mv $@.$(TMP) $@
 
-$(NT_DWI_FITZ): $(AT_DWI_FITZ) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
-    $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
-ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
-    $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
-	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
-    $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
-endif
-	mv $@.$(TMP) $@
-
-$(NT_MGE_FITZ): $(AT_MGE_FITZ) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(foreach p,mge_mean mge_r2star mge_t2star, \
-    $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
-	mv $@.$(TMP) $@
-
-$(NT_MTR_FITZ): $(AT_MTR_FITZ) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),mtr_ratio)
-	mv $@.$(TMP) $@
-
-$(AT_DWI_HARMZ): $(AT_DWI_HARM)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
-    $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
-ifneq ($(MULTI),)
-	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
-    $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
-	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
-    $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
-endif
-	mv $@.$(TMP) $@
-
-$(AT_MGE_HARMZ): $(AT_MGE_HARM)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(foreach p,mge_mean mge_r2star mge_t2star, \
-    $(call zscore,harm,$(word 1, $+),$(p),$@.$(TMP)))
-	mv $@.$(TMP) $@
-
-$(AT_MTR_HARMZ): $(AT_MTR_HARM)
-	-rm -rf $@
-	mkdir -p $@.$(TMP)
-	$(call zscore,harm,$(word 1, $+),mtr_ratio,$@.$(TMP))
-	mv $@.$(TMP) $@
-
-$(NT_DWI_HARMZ): $(AT_DWI_HARMZ) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_NORM): $(AT_DWI_NORM) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -863,14 +803,14 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(NT_MGE_HARMZ): $(AT_MGE_HARMZ) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_NORM): $(AT_MGE_NORM) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	mv $@.$(TMP) $@
 
-$(NT_MTR_HARMZ): $(AT_MTR_HARMZ) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
+$(NT_MTR_NORM): $(AT_MTR_NORM) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),mtr_ratio)
@@ -908,21 +848,7 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_DWI_FITZ_TBSS): $(AT_DWI_FITZ)
-	-rm -rf $@
-	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
-	mkdir -p $@.$(TMP)
-	$(foreach m,dti_S0 dti_FA dti_MD dti_RD dti_AD,\
-  	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
-ifneq ($(MULTI),)
-	$(foreach m,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
-  	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
-	$(foreach m,noddi_ficvf noddi_odi noddi_fiso, \
-  	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
-endif
-	mv $@.$(TMP) $@
-
-$(AT_DWI_HARMZ_TBSS): $(AT_DWI_HARMZ)
+$(AT_DWI_NORM_TBSS): $(AT_DWI_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -953,15 +879,7 @@ $(AT_MGE_HARM_TBSS): $(AT_MGE_HARM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MGE_FITZ_TBSS): $(AT_MGE_FITZ)
-	-rm -rf $@
-	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
-	mkdir -p $@.$(TMP)
-	$(foreach m,mge_mean mge_r2star mge_t2star,\
-  	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
-	mv $@.$(TMP) $@
-
-$(AT_MGE_HARMZ_TBSS): $(AT_MGE_HARMZ)
+$(AT_MGE_NORM_TBSS): $(AT_MGE_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -985,15 +903,7 @@ $(AT_MTR_HARM_TBSS): $(AT_MTR_HARM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_FITZ_TBSS): $(AT_MTR_FITZ)
-	-rm -rf $@
-	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
-	mkdir -p $@.$(TMP)
-	$(foreach m,mtr_ratio,\
-  	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
-	mv $@.$(TMP) $@
-
-$(AT_MTR_HARMZ_TBSS): $(AT_MTR_HARMZ)
+$(AT_MTR_NORM_TBSS): $(AT_MTR_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -1276,7 +1186,7 @@ endef
 # Lesion Segmentation
 ##############################################################################
 
-$(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_HARMZ)
+$(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1292,7 +1202,7 @@ $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_HARMZ)
 $(AT_DWI_TISSUE_MASK): $(AT_DWI_LESION)
 $(AT_DWI_LESION_MASK): $(AT_DWI_LESION)
 
-$(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_HARMZ)
+$(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1320,7 +1230,7 @@ $(NT_DWI_PRIOR): $(AT_LESION_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 $(NT_MGE_PRIOR): $(AT_LESION_MASK) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_HARMZ)
+$(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1336,7 +1246,7 @@ $(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_HARMZ)
 $(NT_DWI_TISSUE_MASK): $(NT_DWI_LESION)
 $(NT_DWI_LESION_MASK): $(NT_DWI_LESION)
 
-$(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_HARMZ)
+$(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1540,13 +1450,13 @@ endif
 endef
 
 $(foreach t, $(AT_REGIONS), \
-	$(foreach p, fit fitz harm harmz, \
+	$(foreach p, fit harm norm, \
 		$(eval $(call region.tbss.map,$(t),$(p))) \
 			$(eval $(call region.map,$(t),$(p)))))
 
 $(foreach b, curves tissue lesion, \
 	$(foreach t, whole.vertex whole.voxel whole.core along.vertex along.voxel along.core, \
-		$(foreach p, fit fitz harm harmz, \
+		$(foreach p, fit harm norm, \
 			$(eval $(call bundles.param.map, native.dwi/tract/bundles, $(BUNDLE_LIST), $(t), $(p), $(b))))))
 
 ##############################################################################
@@ -1688,12 +1598,12 @@ all.tract: \
 	$(foreach b, curves tissue lesion, \
   	$(foreach m, whole, \
 			$(foreach t, vertex voxel, \
-				$(foreach p, fit fitz harm harmz, \
+				$(foreach p, fit harm norm, \
 					native.dwi/tract/bundles.$(b).$(m).$(t).$(p).map))))
 
 all.region: \
 	$(foreach t, $(AT_REGIONS), \
-		$(foreach p, fit fitz harm harmz, \
+		$(foreach p, fit harm norm, \
       atlas/region/$(t).dwi.tbss.$(p).map \
       atlas/region/$(t).mge.tbss.$(p).map \
       atlas/region/$(t).dwi.$(p).map \
@@ -1701,11 +1611,11 @@ all.region: \
 
 all: all.vis all.qa all.region all.tract $(AT_DWI_XFIB)
 
-params: $(VIS_ANAT_TARS) $(AT_DWI_HARM) $(AT_MGE_HARMZ) $(AT_DWI_FIT) $(AT_MGE_FITZ) 
+params: $(VIS_ANAT_TARS) $(AT_DWI_HARM) $(AT_MGE_NORM) $(AT_DWI_FIT) 
 
 zscores: params \
-         $(AT_DWI_HARM) $(AT_MGE_HARMZ) $(AT_DWI_FITZ) $(AT_MGE_FITZ) \
-         $(NT_DWI_HARMZ) $(NT_MGE_HARMZ) $(NT_DWI_FITZ) $(NT_MGE_FITZ)
+         $(AT_DWI_HARM) $(AT_MGE_NORM) \
+         $(NT_DWI_NORM) $(NT_MGE_NORM)
 
 lesion: zscores $(VIS_LESION_TARS) \
         $(AT_DWI_LESION) $(AT_MGE_LESION) $(NT_DWI_LESION) $(NT_MGE_LESION)
