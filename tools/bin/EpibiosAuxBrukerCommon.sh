@@ -45,7 +45,7 @@ if [ ${site} == "Melbourne" ]; then
 	mthigh=FLASH_Yes_On.repeat
 fi
 
-params=${workflow}/params/${site}
+params=${workflow}/params/${site}/pipe
 
 mkdir -p ${output}
 

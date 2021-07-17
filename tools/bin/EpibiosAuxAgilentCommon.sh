@@ -31,7 +31,7 @@ sid=$(basename ${input})
 
 echo "... processing subject ${sid} from ${site}"
 
-params=${workflow}/params/${site}
+params=${workflow}/params/${site}/pipe
 
 tmp=${output}.tmp.${RANDOM}
 mkdir -p ${tmp}
