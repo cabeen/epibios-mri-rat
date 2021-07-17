@@ -29,8 +29,8 @@ QIT_CMD     := qit $(QIT_MEMORY) --verbose --debug
 TMP         := tmp.$(shell date +%s)
 BCK         := bck.$(shell date +%s)
 
-TIME        := $(shell basename $(dir $(dir $(shell pwd))))
-SITE        := $(shell basename $(dir $(dir $(dir $(shell pwd)))))
+SITE        := $(shell basename $(shell cd $(shell pwd) && cd ../.. && pwd))
+TIME        := $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
 STATS       := $(ROOT)/data/param
 
 $(info using pwd: $(shell pwd))
@@ -370,13 +370,13 @@ $(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --input $@.dti \
     --output $@.mask.nii.gz
 	$(QIT_CMD) VolumeThreshold \
-    --input $(word 1, $+)/dti_MD.nii.gz \
+    --input $@.dti/dti_MD.nii.gz \
     --mask $@.mask.nii.gz \
     --threshold 0.0003 \
     --output $@.mask.nii.gz
 	$(QIT_CMD) MaskFill \
     --input $@.mask.nii.gz \
-    --output $@.masknii.gz
+    --output $@.mask.nii.gz
 	$(QIT_CMD) GradientsMatch \
     --input $(word 2, $+) \
     --dwi $(word 1, $+) \
