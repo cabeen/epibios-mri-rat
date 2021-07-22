@@ -29,14 +29,14 @@ QIT_CMD     := qit $(QIT_MEMORY) --verbose --debug
 TMP         := tmp.$(shell date +%s)
 BCK         := bck.$(shell date +%s)
 
-TIME        := $(shell basename $(dir $(dir $(shell pwd))))
-SITE        := $(shell basename $(dir $(dir $(dir $(shell pwd)))))
+SITE        := $(shell basename $(shell cd $(shell pwd) && cd ../.. && pwd))
+TIME        := $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
 STATS       := $(ROOT)/data/param
 
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
 $(info using stats: $(STATS))
-$(info using site: $(TIME))
+$(info using time: $(TIME))
 $(info using site: $(SITE))
 
 include $(ROOT)/params/$(SITE)/pipe/Makefile
@@ -115,8 +115,9 @@ NT_DWI_JAC         := native.dwi/warp/logjacdet.nii.gz
 
 NT_DWI_RAW         := native.dwi/source/raw.nii.gz
 NT_DWI_NLM         := native.dwi/source/nlm.nii.gz
-NT_DWI_EDDY        := native.dwi/source/eddy
 NT_DWI_INPUT       := native.dwi/source/dwi.nii.gz
+NT_DWI_EDDY        := native.dwi/source/eddy
+NT_DWI_QUAD        := native.dwi/source/quad
 NT_DWI_QA          := native.dwi/source/qa.csv
 AT_DWI_VIS         := atlas.dwi/vis
 
@@ -370,13 +371,13 @@ $(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --input $@.dti \
     --output $@.mask.nii.gz
 	$(QIT_CMD) VolumeThreshold \
-    --input $(word 1, $+)/dti_MD.nii.gz \
+    --input $@.dti/dti_MD.nii.gz \
     --mask $@.mask.nii.gz \
     --threshold 0.0003 \
     --output $@.mask.nii.gz
 	$(QIT_CMD) MaskFill \
     --input $@.mask.nii.gz \
-    --output $@.masknii.gz
+    --output $@.mask.nii.gz
 	$(QIT_CMD) GradientsMatch \
     --input $(word 2, $+) \
     --dwi $(word 1, $+) \
@@ -389,6 +390,14 @@ $(NT_DWI_NLM): $(NT_DWI_RAW)
 
 $(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
 	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
+
+$(NT_DWI_QUAD): $(NT_DWI_EDDY)
+	eddy_quad -v $(NT_DWI_EDDY)/out \
+    -i $(NT_DWI_EDDY)/index.txt \
+    -par $(NT_DWI_EDDY)/acqparams.txt \
+    -m $(NT_DWI_EDDY)/brain_mask.nii.gz \
+    -b $(NT_DWI_EDDY)/bvals \
+    -o $@
 
 $(NT_DWI_QA): $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
 	$(QIT_CMD) VolumeDifferenceMap \
@@ -1513,9 +1522,15 @@ VIS_ANAT_TARS   += $(MY_ANAT)
 VIS_LESION_TARS += $(MY_LESION)
 endef
 
-$(foreach p,dti_S0 dti_FA dti_MD fwdti_FA fwdti_MD fwdti_FW noddi_ficvf noddi_odi noddi_fiso, \
+$(foreach p,dti_S0 dti_FA dti_MD, \
   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
+
+ifneq ($(MULTI),)
+$(foreach p,fwdti_FA fwdti_MD fwdti_FW noddi_ficvf noddi_odi noddi_fiso, \
+  $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
+  $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
+endif
 
 $(foreach p,mean r2star t2star, \
 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP),$(AT_MGE_VIS)/large_mge_$(p))) \
@@ -1590,7 +1605,7 @@ $(NT_MTR_RESIDUAL): $(NT_MTR_MASK) $(NT_MTR_RATIO) $(NT_MTR_RAW)
 
 all.vis: $(VIS_ANAT_TARS) $(VIS_LESION_TARS)
 
-all.qa: $(AT_DWI_RESIDUAL) $(AT_MGE_RESIDUAL) $(NT_DWI_QA) $(NT_MGE_QA)
+all.qa: $(AT_DWI_RESIDUAL) $(AT_MGE_RESIDUAL) $(NT_DWI_QA) $(NT_DWI_QUAD) $(NT_MGE_QA)
 
 all.tract: \
 	$(foreach t, curves tissue lesion, \

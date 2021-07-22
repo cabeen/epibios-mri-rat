@@ -23,7 +23,7 @@ fi
 input=${1}
 output=${2}
 
-site=$(basename $(dirname ${input}))
+site=$(basename $(dirname $(dirname ${input})))
 
 mkdir -p ${output}
 
@@ -33,7 +33,7 @@ echo "  using site: ${site}"
 echo "  using output: ${output}"
 
 scanner=Bruker
-if [ ${site} == "Einstein-P2" ] || [ ${site} == "Einstein-Exvivo-P2" ]; then 
+if [ ${site} == "Einstein-P2" ]; then 
   scanner=Agilent
 fi
 
