@@ -1,5 +1,0 @@
-site,tp,param,metric,ntbi,npte,df,rsq,arsq,beta,stde,tval,pval
-Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.map.density_mean,native.dwi.tract.bundles.tissue.map.density_mean.slfd_left,22,0,29,0.0696420025739845,0.0375606923179149,-0.665462360920552,0.451662381041802,-1.4733623805144,0.151425746546084
-Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.map.density_mean,native.dwi.tract.bundles.tissue.map.density_mean.hipcom,22,0,29,0.137049246265152,0.107292323722571,-1.11694123383301,0.520458379943281,-2.14607214885219,0.0403672039088921
-Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.map.density_mean,native.dwi.tract.bundles.tissue.map.density_mean.opticrad_left,22,0,29,0.0942222147837315,0.062988498052136,-0.947812474398902,0.545704581073236,-1.73686002879954,0.093024643711451
-Melbourne-P1,5mo,native.dwi.tract.bundles.tissue.map.density_mean,native.dwi.tract.bundles.tissue.map.density_mean.vofa_left,22,0,29,0.123598853895544,0.0933781247195287,-1.42152125248719,0.702908191740546,-2.02234270305942,0.052450319828407

@@ -1,3 +1,0 @@
-site,tp,param,metric,ntbi,npte,df,rsq,arsq,beta,stde,tval,pval
-Melbourne-P1,2d,native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean,native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfd_right,22,9,29,0.0150861420689325,-0.0188764047562768,-0.266193824387336,0.399400867888294,-0.666482839145422,0.510370469892913
-Melbourne-P1,2d,native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean,native.dwi.tract.bundles.tissue.whole.voxel.fitz.map.dti_FA_mean.slfa_left,22,9,29,0.0531974924331185,0.020549130103226,0.499866992222063,0.391597201878655,1.2764825433481,0.211912917364563

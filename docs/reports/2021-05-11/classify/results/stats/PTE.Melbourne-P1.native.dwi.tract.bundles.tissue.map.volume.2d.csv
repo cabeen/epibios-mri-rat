@@ -1,3 +1,0 @@
-site,tp,param,metric,ntbi,npte,df,rsq,arsq,beta,stde,tval,pval
-Melbourne-P1,2d,native.dwi.tract.bundles.tissue.map.volume,native.dwi.tract.bundles.tissue.map.volume.amyhypven_right,22,9,29,0.0330778101118004,-0.000264334367103158,-0.394164269990628,0.395736076507304,-0.996028144488243,0.327475217108242
-Melbourne-P1,2d,native.dwi.tract.bundles.tissue.map.volume,native.dwi.tract.bundles.tissue.map.volume.amyhypven_left,22,9,29,0.0281857413225114,-0.00532509518360902,-0.363851031163116,0.39673591164571,-0.917111409586836,0.366648758360541
