@@ -47,7 +47,7 @@ include $(ROOT)/params/$(SITE)/pipe/Makefile
 
 LESION_ERODE      ?= 3          # erode the lesion brain mask by this much 
 LESION_MINVOX     ?= 5          # the minimum num of contiguous lesion voxels
-HEME_DWI_ZSCORE   ?= -3         # the DTI baseline abnormality of heme 
+HEME_DWI_ZSCORE   ?= -2.5       # the DTI MD abnormality of heme 
 CAVITY_DWI_ZSCORE ?= 5          # the DTI MD abnormality of cavity 
 HEME_MGE_ZSCORE   ?= -2         # the T2-star abnormality of heme
 CAVITY_MGE_ZSCORE ?= 3          # the T2-star abnormality of cavity
@@ -1200,7 +1200,7 @@ $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
-    --heme $(word 3, $+)/dti_S0.nii.gz \
+    --heme $(word 3, $+)/dti_MD.nii.gz \
     --cavity $(word 3, $+)/dti_MD.nii.gz \
     --erode $(LESION_ERODE) \
     --zheme $(HEME_DWI_ZSCORE) \
@@ -1522,8 +1522,11 @@ VIS_ANAT_TARS   += $(MY_ANAT)
 VIS_LESION_TARS += $(MY_LESION)
 endef
 
+# $(foreach p,dti_S0 dti_FA dti_MD, \
+#   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
+#   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
+
 $(foreach p,dti_S0 dti_FA dti_MD, \
-  $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
 
 ifneq ($(MULTI),)
@@ -1533,8 +1536,11 @@ $(foreach p,fwdti_FA fwdti_MD fwdti_FW noddi_ficvf noddi_odi noddi_fiso, \
 endif
 
 $(foreach p,mean r2star t2star, \
-	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP),$(AT_MGE_VIS)/large_mge_$(p))) \
 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP_SMALL),$(AT_MGE_VIS)/small_mge_$(p))))
+
+# $(foreach p,mean r2star t2star, \
+# 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP),$(AT_MGE_VIS)/large_mge_$(p))) \
+# 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP_SMALL),$(AT_MGE_VIS)/small_mge_$(p))))
 
 $(NT_DWI_RESIDUAL): $(NT_DWI_BRAIN_MASK) $(NT_DWI_INPUT) $(NT_DWI_BVECS) 
 	$(eval TMP := tmp.$(shell date +%s))
