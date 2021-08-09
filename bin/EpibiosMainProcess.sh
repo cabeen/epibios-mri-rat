@@ -40,12 +40,18 @@ name=$(basename $0)
 case=$(pwd)
 source=
 multi=""
+site=""
+time=""
+stats=""
 posit=""
 
 while [ "$1" != "" ]; do
     case $1 in
-        --source)        shift; source=$1 ;;
+        --source)       shift; source=$1 ;;
         --case)         shift; case=$1 ;;
+        --time)         shift; time=$1 ;;
+        --site)         shift; site=$1 ;;
+        --stats)        shift; stats=$1 ;;
         --multi)        multi='MULTI=1' ;;
         --help )        usage ;;
         * )             posit="${posit} $1" ;;
@@ -67,6 +73,9 @@ echo "started ${name}"
 echo "  using makefile: ${makefile}"
 echo "  using source: ${source}"
 echo "  using case: ${case}"
+echo "  using site: ${site}"
+echo "  using time: ${time}"
+echo "  using stats: ${stats}"
 echo "  using targets: ${targets}"
 
 if [ ! -e ${case}/native.source ]; then
@@ -78,6 +87,10 @@ if [ ! -e ${case}/native.source ]; then
 fi
 
 args="-k -C ${case} -f ${makefile} ${multi} ${posit}"
+
+if [ "${time}" != "" ]; then args="${args} TIME=${time}"; fi
+if [ "${site}" != "" ]; then args="${args} SITE=${site}"; fi
+if [ "${stats}" != "" ]; then args="${args} STATS=${stats}"; fi
 
 mkdir -p ${case}
 echo "running: make ${args}"

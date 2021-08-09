@@ -29,9 +29,9 @@ QIT_CMD     := qit $(QIT_MEMORY) --verbose --debug
 TMP         := tmp.$(shell date +%s)
 BCK         := bck.$(shell date +%s)
 
-SITE        := $(shell basename $(shell cd $(shell pwd) && cd ../.. && pwd))
-TIME        := $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
-STATS       := $(ROOT)/data/param
+SITE        ?= $(shell basename $(shell cd $(shell pwd) && cd ../.. && pwd))
+TIME        ?= $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
+STATS       ?= $(ROOT)/data/param
 
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
