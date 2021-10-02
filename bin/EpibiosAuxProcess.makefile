@@ -386,7 +386,7 @@ $(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
 $(NT_MATCH_BVALS): $(NT_MATCH_BVECS)
 
 $(NT_DWI_NLM): $(NT_DWI_RAW)
-	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
 
 $(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
 	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
@@ -497,7 +497,7 @@ $(NT_MGE_MEAN_RAW): $(NT_MGE_RAW)
     --output $@
 
 $(NT_MGE_NLM): $(NT_MGE_RAW)
-	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
 
 $(NT_MGE_QA): $(NT_MGE_RAW) $(NT_MGE_NLM)
 	$(QIT_CMD) VolumeDifferenceMap \
@@ -566,11 +566,11 @@ $(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
 
 $(NT_MTR_LOW_NLM): $(NT_MTR_LOW_RAW)
 	-mkdir -p $(dir $@)
-	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
 
 $(NT_MTR_HIGH_NLM): $(NT_MTR_HIGH_RAW)
 	-mkdir -p $(dir $@)
-	bash $(ROOT)/bin/EpibiosAuxDenoise.sh $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
 
 $(NT_MTR_MASK): $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)
