@@ -50,6 +50,7 @@ qit --verbose VolumeCat \
 cp ${params}/multi.bvals.txt ${tmp}/dwi.bvals.txt
 cp ${params}/multi.bvecs.txt ${tmp}/dwi.bvecs.txt 
 cp ${params}/te.txt ${tmp}/mge.te.txt 
+cp ${params}/shells.txt ${tmp}/dwi.shells.txt 
 
 touch ${tmp}/mt.high.missing
 touch ${tmp}/mt.low.missing

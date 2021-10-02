@@ -6,10 +6,6 @@
 #
 ################################################################################
 
-# ifndef STATS 
-# $(error STATS is required)
-# endif
-
 BIN   := $(dir $(abspath $(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST))))
 ROOT  ?= $(abspath $(BIN)/..)
 
@@ -40,6 +36,30 @@ $(info using time: $(TIME))
 $(info using site: $(SITE))
 
 include $(ROOT)/params/$(SITE)/pipe/Makefile
+
+ifndef MGE_CROP 
+$(error MGE_CROP is required)
+endif
+
+ifndef MT_CROP 
+$(error MT_CROP is required)
+endif
+
+ifndef HEME_S0_ZSCORE 
+$(error HEME_S0_ZSCORE is required)
+endif
+
+ifndef CAVITY_MD_ZSCORE 
+$(error CAVITY_MD_ZSCORE is required)
+endif
+
+ifndef HEME_T2S_ZSCORE 
+$(error HEME_T2S_ZSCORE is required)
+endif
+
+ifndef CAVITY_T2S_ZSCORE 
+$(error CAVITY_T2S_ZSCORE is required)
+endif
 
 ################################################################################
 # Parameters 

@@ -74,11 +74,13 @@ if [ ! -e ${output}/dwi.nii.gz ]; then
 
     cp ${params}/multi.bvals.txt ${output}/dwi.bvals.txt 
     cp ${params}/multi.bvecs.txt ${output}/dwi.bvecs.txt 
+    cp ${params}/shells.txt ${output}/dwi.shells.txt 
   else
     if [ -e ${input}/${dwi}/data.nii.gz ]; then
       ln ${input}/${dwi}/data.nii.gz ${output}/dwi.nii.gz
       cp ${params}/bvals.txt ${output}/dwi.bvals.txt 
       cp ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
+      cp ${params}/shells.txt ${output}/dwi.shells.txt 
     else
       repeats=${input}/${dwi}.repeat.*/data.nii.gz
       files=( $repeats )
@@ -87,6 +89,7 @@ if [ ! -e ${output}/dwi.nii.gz ]; then
         ln ${files[0]} ${output}/dwi.nii.gz
         cp ${params}/bvals.txt ${output}/dwi.bvals.txt 
         cp ${params}/bvecs.txt ${output}/dwi.bvecs.txt 
+        cp ${params}/shells.txt ${output}/dwi.shells.txt 
       else
         echo "dwi missing for ${site} ${sid}"
         touch ${output}/dwi.missing
