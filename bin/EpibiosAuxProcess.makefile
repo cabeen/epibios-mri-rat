@@ -466,7 +466,7 @@ $(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MA
     --mask $(word 4, $+) \
     --output $@
 
-$(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+$(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK) $(NT_SHELLS)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(QIT_CMD) VolumeDwiFeature \
@@ -478,7 +478,7 @@ $(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MA
 	$(QIT_CMD) VolumeExpDecayFit \
     --input $@.$(TMP)/means.nii.gz \
     --select $(ADC_SHELLS) \
-    --varying $(NT_SHELLS) \
+    --varying $(word 5, $+) \
     --outputBeta $@.$(TMP)/adc.nii.gz
 	mv $@.$(TMP) $@
 
@@ -768,6 +768,7 @@ $(AT_DWI_FIT): $(NT_DWI_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
+	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),adc)
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -794,6 +795,7 @@ $(AT_DWI_HARM): $(NT_DWI_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
   	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
+	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),adc)
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
@@ -851,6 +853,7 @@ $(NT_DWI_NORM): $(AT_DWI_NORM) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
+	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),adc)
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
