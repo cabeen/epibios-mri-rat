@@ -72,6 +72,7 @@ CAVITY_DWI_ZSCORE ?= 5          # the DTI MD abnormality of cavity
 HEME_MGE_ZSCORE   ?= -2         # the T2-star abnormality of heme
 CAVITY_MGE_ZSCORE ?= 3          # the T2-star abnormality of cavity
 PERILESION_LEVELS ?= 3,5,7,9    # the levels for perilesional analysis
+ADC_SHELLS        ?= 0,3000     # the shells used for computing ADC 
 
 ROI_ERODE         ?= 1          # the erosion count for restricted ROI analysis
 ROI_THRESH        ?= 0.15       # the FA threshold for restricted ROI analysis
@@ -118,6 +119,7 @@ AT_DWI             := atlas.dwi
 AT_MGE             := atlas.mge
 AT_MTR             := atlas.mtr
 
+NT_SHELLS          := native.dwi/source/dwi.shells.txt
 NT_RAW_BVECS       := native.dwi/source/raw.bvecs.txt
 NT_RAW_BVALS       := native.dwi/source/raw.bvals.txt
 NT_MATCH_BVECS     := native.dwi/source/match.bvecs.txt
@@ -142,6 +144,7 @@ NT_DWI_QA          := native.dwi/source/qa.csv
 AT_DWI_VIS         := atlas.dwi/vis
 
 NT_DWI_ALL_DTI     := native.dwi/model/all.dti
+NT_DWI_ADC         := native.dwi/model/fit.adc
 NT_DWI_DTI         := native.dwi/model/fit.dti
 NT_DWI_FWDTI       := native.dwi/model/fit.fwdti
 NT_DWI_NODDI       := native.dwi/model/fit.noddi
@@ -351,6 +354,7 @@ along.voxel.ms = $(QIT_CMD) CurvesMeasureAlongBatch \
 # Parameter Estimation - DWI 
 ##############################################################################
 
+$(NT_SOURCE)/common/dwi.shells.txt: $(NT_SOURCE)
 $(NT_SOURCE)/common/dwi.bvecs.txt: $(NT_SOURCE)
 $(NT_SOURCE)/common/dwi.bvals.txt: $(NT_SOURCE)
 $(NT_SOURCE)/common/dwi.nii.gz: $(NT_SOURCE)
@@ -360,6 +364,10 @@ $(NT_SOURCE)/common/mt.low.nii.gz: $(NT_SOURCE)
 $(NT_SOURCE)/common/mt.high.nii.gz: $(NT_SOURCE)
 
 $(NT_RAW_BVECS): $(NT_SOURCE)/common/dwi.bvecs.txt
+	-mkdir -p $(dir $@)
+	cp $(word 1, $+) $@
+
+$(NT_SHELLS): $(NT_SOURCE)/common/dwi.shells.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
@@ -457,6 +465,22 @@ $(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MA
     --gradients $(word 2, $+) \
     --mask $(word 4, $+) \
     --output $@
+
+$(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+	-rm -rf $@
+	-mkdir -p $@.$(TMP)
+	$(QIT_CMD) VolumeDwiFeature \
+    --feature SphericalMean \
+    --input $(word 1, $+) \
+    --gradients $(word 2, $+) \
+    --mask $(word 4, $+) \
+    --output $@.$(TMP)/means.nii.gz
+	$(QIT_CMD) VolumeExpDecayFit \
+    --input $@.$(TMP)/means.nii.gz \
+    --select $(ADC_SHELLS) \
+    --varying $(NT_SHELLS) \
+    --outputBeta $@.$(TMP)/adc.nii.gz
+	mv $@.$(TMP) $@
 
 $(NT_DWI_FWDTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeTensorFit \
@@ -616,16 +640,17 @@ $(NT_MTR_RATIO_RAW): $(NT_MTR_LOW_RAW) $(NT_MTR_HIGH_RAW)
 # Parameter Harmonization
 ##############################################################################
 
-$(NT_DWI_FIT): $(NT_DWI_BRAIN_MASK) $(NT_DWI_DTI) $(if $(MULTI), $(NT_DWI_FWDTI) $(NT_DWI_NODDI))
+$(NT_DWI_FIT): $(NT_DWI_BRAIN_MASK) $(NT_DWI_DTI) $(NT_DWI_ADC) $(if $(MULTI), $(NT_DWI_FWDTI) $(NT_DWI_NODDI))
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call vol.mask, $(word 2, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/$(p).nii.gz))
+	$(call vol.mask, $(word 3, $+)/adc.nii.gz, $(word 1, $+), $@.$(TMP)/adc.nii.gz)
 ifneq ($(MULTI),)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD dti_FW, \
-    $(call vol.mask, $(word 3, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/fw$(p).nii.gz))
+    $(call vol.mask, $(word 4, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/fw$(p).nii.gz))
 	$(foreach p,noddi_ficvf noddi_odi noddi_fiso, \
-    $(call vol.mask, $(word 4, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/$(p).nii.gz))
+    $(call vol.mask, $(word 5, $+)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/$(p).nii.gz))
 endif
 	mv $@.$(TMP) $@
 
@@ -647,6 +672,7 @@ $(NT_DWI_HARM): $(NT_DWI_BRAIN_MASK) $(NT_DWI_FIT)
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call harmonize,$(word 2, $+),$(p),$(word 1, $+),$@.$(TMP)))
+	$(call harmonize,$(word 2, $+),adc,$(word 1, $+),$@.$(TMP))
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call harmonize,$(word 2, $+),$(p),$(word 1, $+),$@.$(TMP)))
@@ -798,6 +824,7 @@ $(AT_DWI_NORM): $(AT_DWI_HARM)
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
     $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
+	$(call zscore,$(word 1, $+),adc,$@.$(TMP))
 ifneq ($(MULTI),)
 	$(foreach p,fwdti_S0 fwdti_FA fwdti_MD fwdti_AD fwdti_RD fwdti_FW, \
     $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
@@ -1220,8 +1247,8 @@ $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
     --prior $(word 2, $+) \
-    --heme $(word 3, $+)/dti_MD.nii.gz \
-    --cavity $(word 3, $+)/dti_MD.nii.gz \
+    --heme $(word 3, $+)/adc.nii.gz \
+    --cavity $(word 3, $+)/adc.nii.gz \
     --erode $(LESION_ERODE) \
     --zheme $(HEME_DWI_ZSCORE) \
     --zcavity $(CAVITY_DWI_ZSCORE) \
