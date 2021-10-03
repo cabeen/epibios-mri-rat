@@ -33,16 +33,19 @@ qit VolumeCrop \
   --input ${dwi} \
   --output ${tmp}/dwi.nii.gz
 
-echo "formatting gradients"
-qit VectsTransform --rows --input ${bvecs} --output ${tmp}/bvecs
-qit VectsTransform --rows --input ${bvals} --output ${tmp}/bvals
-
 echo "extracting baselines"
 qit VolumeDwiBaseline \
   --input ${tmp}/dwi.nii.gz \
   --gradients ${bvecs} \
   --cat ${tmp}/baselines.nii.gz \
   --mean ${tmp}/baseline.nii.gz
+
+echo "running bet"
+bet ${tmp}/baseline.nii.gz ${tmp}/brain -m -f 0.3
+
+echo "formatting gradients"
+qit VectsTransform --rows --input ${bvecs} --output ${tmp}/bvecs
+qit VectsTransform --rows --input ${bvals} --output ${tmp}/bvals
 
 echo "defining parameters"
 idx=""
@@ -53,15 +56,12 @@ done
 echo ${idx} > ${tmp}/index.txt
 echo "1 0 0 0.108420" > ${tmp}/acqparams.txt
 
-echo "running bet"
-bet ${tmp}/baseline.nii.gz ${tmp}/brain -m -f 0.3
-
 echo "running eddy"
 eddycmd="eddy"
  if [ ! $(which eddy) ]; then eddycmd=eddy_openmp; fi
 
 ${eddycmd} --verbose \
-  --repol \
+  --data_is_shelled \
 	--imain=${tmp}/dwi.nii.gz \
 	--mask=${tmp}/brain_mask.nii.gz \
 	--acqp=${tmp}/acqparams.txt \
