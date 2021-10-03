@@ -27,7 +27,8 @@ BCK         := bck.$(shell date +%s)
 
 SITE        ?= $(shell basename $(shell cd $(shell pwd) && cd ../.. && pwd))
 TIME        ?= $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
-STATS       ?= $(ROOT)/data/param
+SITE_BASE   ?= $(shell echo $(SITE) | sed 's/-.*//g')
+STATS       ?= $(ROOT)/data/stats/$(SITE_BASE)
 
 $(info using pwd: $(shell pwd))
 $(info using input: $(INPUT))
@@ -67,8 +68,8 @@ include $(ROOT)/params/$(SITE)/pipe/Makefile
 
 LESION_ERODE      ?= 3          # erode the lesion brain mask by this much 
 LESION_MINVOX     ?= 5          # the minimum num of contiguous lesion voxels
-HEME_DWI_ZSCORE   ?= -2.5       # the DTI MD abnormality of heme 
-CAVITY_DWI_ZSCORE ?= 5          # the DTI MD abnormality of cavity 
+HEME_DWI_ZSCORE   ?= -5         # the DTI MD abnormality of heme 
+CAVITY_DWI_ZSCORE ?= 7          # the DTI MD abnormality of cavity 
 HEME_MGE_ZSCORE   ?= -2         # the T2-star abnormality of heme
 CAVITY_MGE_ZSCORE ?= 3          # the T2-star abnormality of cavity
 PERILESION_LEVELS ?= 3,5,7,9    # the levels for perilesional analysis
@@ -1580,7 +1581,7 @@ endef
 #   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP),$(AT_DWI_VIS)/large_$(p))) \
 #   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
 
-$(foreach p,dti_S0 dti_FA dti_MD, \
+$(foreach p,adc dti_S0 dti_FA dti_MD, \
   $(eval $(call vis,$(AT_DWI_HARM),$(p).nii.gz,$(AT_DWI_LESION_MASK),$(VIS_CROP_SMALL),$(AT_DWI_VIS)/small_$(p))))
 
 ifneq ($(MULTI),)

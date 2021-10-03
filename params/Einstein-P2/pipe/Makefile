@@ -1,7 +1,7 @@
-HEME_S0_ZSCORE     ?= -3
-CAVITY_MD_ZSCORE   ?= 5
-HEME_T2S_ZSCORE    ?= -2
-CAVITY_T2S_ZSCORE  ?= 3
+HEME_DWI_ZSCORE   ?= -5
+CAVITY_DWI_ZSCORE ?= 7
+HEME_MGE_ZSCORE   ?= -2
+CAVITY_MGE_ZSCORE ?= 3
 
 MGE_CROP          ?= :,:,:
 MT_CROP           ?= :,:,:
