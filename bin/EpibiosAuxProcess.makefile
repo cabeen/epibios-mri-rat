@@ -37,29 +37,29 @@ $(info using site: $(SITE))
 
 include $(ROOT)/params/$(SITE)/pipe/Makefile
 
-ifndef MGE_CROP 
-$(error MGE_CROP is required)
-endif
-
-ifndef MT_CROP 
-$(error MT_CROP is required)
-endif
-
-ifndef HEME_S0_ZSCORE 
-$(error HEME_S0_ZSCORE is required)
-endif
-
-ifndef CAVITY_MD_ZSCORE 
-$(error CAVITY_MD_ZSCORE is required)
-endif
-
-ifndef HEME_T2S_ZSCORE 
-$(error HEME_T2S_ZSCORE is required)
-endif
-
-ifndef CAVITY_T2S_ZSCORE 
-$(error CAVITY_T2S_ZSCORE is required)
-endif
+# ifndef MGE_CROP 
+# $(error MGE_CROP is required)
+# endif
+# 
+# ifndef MT_CROP 
+# $(error MT_CROP is required)
+# endif
+# 
+# ifndef HEME_S0_ZSCORE 
+# $(error HEME_S0_ZSCORE is required)
+# endif
+# 
+# ifndef CAVITY_MD_ZSCORE 
+# $(error CAVITY_MD_ZSCORE is required)
+# endif
+# 
+# ifndef HEME_T2S_ZSCORE 
+# $(error HEME_T2S_ZSCORE is required)
+# endif
+# 
+# ifndef CAVITY_T2S_ZSCORE 
+# $(error CAVITY_T2S_ZSCORE is required)
+# endif
 
 ################################################################################
 # Parameters 
@@ -414,7 +414,8 @@ $(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
 $(NT_MATCH_BVALS): $(NT_MATCH_BVECS)
 
 $(NT_DWI_NLM): $(NT_DWI_RAW)
-	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi \
+    --input $(word 1, $+) --output $@
 
 $(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
 	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
@@ -541,7 +542,8 @@ $(NT_MGE_MEAN_RAW): $(NT_MGE_RAW)
     --output $@
 
 $(NT_MGE_NLM): $(NT_MGE_RAW)
-	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi \
+    --input $(word 1, $+) --output $@
 
 $(NT_MGE_QA): $(NT_MGE_RAW) $(NT_MGE_NLM)
 	$(QIT_CMD) VolumeDifferenceMap \
@@ -610,11 +612,13 @@ $(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
 
 $(NT_MTR_LOW_NLM): $(NT_MTR_LOW_RAW)
 	-mkdir -p $(dir $@)
-	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi \
+     --input $(word 1, $+) --output $@
 
 $(NT_MTR_HIGH_NLM): $(NT_MTR_HIGH_RAW)
 	-mkdir -p $(dir $@)
-	$(QIT_CMD) VolumeDenoiseAnts --multi $(word 1, $+) $@
+	$(QIT_CMD) VolumeDenoiseAnts --multi \
+    --input $(word 1, $+) --output $@
 
 $(NT_MTR_MASK): $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)
