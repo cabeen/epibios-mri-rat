@@ -1,0 +1,27 @@
+amyhypdor: amygdala-hypothalamus dorsal connections
+amyhypven: amgdala-hypothalamus ventral connections
+ant_comm: anterior commisure
+atr: anterior thalamic radiation
+cc_ant: corpus callosum anterior portion
+cc_mid: corpus callosum middle portion
+cc_post: corpus callosum posterior portion
+cc_temp: corpus callosum temporal portion
+cerped: cerebral peduncle
+chip: cingulum bundle hippocampal portion
+cing: cingulum bundle dorsal portion
+fimbria: fimbria
+fornix: fornix
+hipcom: hippocampal commisure
+ifof: inferior occipital fasciculus
+ilf: inferior longitudinal fasciculus
+intcap: internal capsule
+opticrad: optic radiation
+slfa: superior longitudinal fasciculus portion A
+slfb: superior longitudinal fasciculus portion B
+slfc: superior longitudinal fasciculus portion C
+slfd: superior longitudinal fasciculus portion D
+thalslat: thalamic lateral projections
+thalsmed: thalamic medial projections
+thalsub: thalamic subcortical projections
+vofa: vertical occipital fasciculus portion A
+vofb
