@@ -2,14 +2,14 @@
 #
 # Makefile for main EPIBIOS processing pipeline
 #
-# Author: Ryan Cabeen
+# Author: | Ryan Cabeen
 #
 ################################################################################
 
 BIN   := $(dir $(abspath $(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST))))
 ROOT  ?= $(abspath $(BIN)/..)
 
-default: all
+default: | all
 
 QIT_THREADS ?= 2
 QIT_MEMORY  ?= -Xmx2G
@@ -30,11 +30,11 @@ TIME        ?= $(shell basename $(shell cd $(shell pwd) && cd .. && pwd))
 SITE_BASE   ?= $(shell echo $(SITE) | sed 's/-.*//g')
 STATS       ?= $(ROOT)/data/stats/$(SITE_BASE)
 
-$(info using pwd: $(shell pwd))
-$(info using input: $(INPUT))
-$(info using stats: $(STATS))
-$(info using time: $(TIME))
-$(info using site: $(SITE))
+$(info using pwd: | $(shell pwd))
+$(info using input: | $(INPUT))
+$(info using stats: | $(STATS))
+$(info using time: | $(TIME))
+$(info using site: | $(SITE))
 
 include $(ROOT)/params/$(SITE)/pipe/Makefile
 
@@ -355,28 +355,28 @@ along.voxel.ms = $(QIT_CMD) CurvesMeasureAlongBatch \
 # Parameter Estimation - DWI 
 ##############################################################################
 
-$(NT_SOURCE)/common/dwi.shells.txt: $(NT_SOURCE)
-$(NT_SOURCE)/common/dwi.bvecs.txt: $(NT_SOURCE)
-$(NT_SOURCE)/common/dwi.bvals.txt: $(NT_SOURCE)
-$(NT_SOURCE)/common/dwi.nii.gz: $(NT_SOURCE)
-$(NT_SOURCE)/common/mge.te.txt: $(NT_SOURCE)
-$(NT_SOURCE)/common/mge.nii.gz: $(NT_SOURCE)
-$(NT_SOURCE)/common/mt.low.nii.gz: $(NT_SOURCE)
-$(NT_SOURCE)/common/mt.high.nii.gz: $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.shells.txt: | $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.bvecs.txt: | $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.bvals.txt: | $(NT_SOURCE)
+$(NT_SOURCE)/common/dwi.nii.gz: | $(NT_SOURCE)
+$(NT_SOURCE)/common/mge.te.txt: | $(NT_SOURCE)
+$(NT_SOURCE)/common/mge.nii.gz: | $(NT_SOURCE)
+$(NT_SOURCE)/common/mt.low.nii.gz: | $(NT_SOURCE)
+$(NT_SOURCE)/common/mt.high.nii.gz: | $(NT_SOURCE)
 
-$(NT_RAW_BVECS): $(NT_SOURCE)/common/dwi.bvecs.txt
+$(NT_RAW_BVECS): | $(NT_SOURCE)/common/dwi.bvecs.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
-$(NT_SHELLS): $(NT_SOURCE)/common/dwi.shells.txt
+$(NT_SHELLS): | $(NT_SOURCE)/common/dwi.shells.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
-$(NT_RAW_BVALS): $(NT_SOURCE)/common/dwi.bvals.txt
+$(NT_RAW_BVALS): | $(NT_SOURCE)/common/dwi.bvals.txt
 	-mkdir -p $(dir $@)
 	cp $(word 1, $+) $@
 
-$(NT_DWI_RAW): $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
+$(NT_DWI_RAW): | $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
 	$(QIT_CMD) VolumeStandardize \
     --input $(word 1, $+) \
     --xfm $(NT_DWI_XFM) \
@@ -388,7 +388,7 @@ $(NT_DWI_RAW): $(NT_SOURCE)/common/dwi.nii.gz $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --mean 1 \
     --output $@
 
-$(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
+$(NT_MATCH_BVECS): | $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
 	$(QIT_CMD) VolumeTensorFit \
    --rounder 100 \
    --shells 0,2800,2900,3000 \
@@ -412,16 +412,16 @@ $(NT_MATCH_BVECS): $(NT_DWI_RAW) $(NT_RAW_BVECS) $(NT_RAW_BVALS)
     --dwi $(word 1, $+) \
     --mask  $@.mask.nii.gz \
     --output $@
-$(NT_MATCH_BVALS): $(NT_MATCH_BVECS)
+$(NT_MATCH_BVALS): | $(NT_MATCH_BVECS)
 
-$(NT_DWI_NLM): $(NT_DWI_RAW)
+$(NT_DWI_NLM): | $(NT_DWI_RAW)
 	$(QIT_CMD) VolumeDenoiseAnts --multi \
     --input $(word 1, $+) --output $@
 
-$(NT_DWI_EDDY): $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
+$(NT_DWI_EDDY): | $(NT_DWI_NLM) $(NT_MATCH_BVECS) $(NT_MATCH_BVALS)
 	bash $(ROOT)/bin/EpibiosAuxDwiCorrect.sh $+ $@
 
-$(NT_DWI_QUAD): $(NT_DWI_EDDY)
+$(NT_DWI_QUAD): | $(NT_DWI_EDDY)
 	eddy_quad -v $(NT_DWI_EDDY)/out \
     -i $(NT_DWI_EDDY)/index.txt \
     -par $(NT_DWI_EDDY)/acqparams.txt \
@@ -429,7 +429,7 @@ $(NT_DWI_QUAD): $(NT_DWI_EDDY)
     -b $(NT_DWI_EDDY)/bvals \
     -o $@
 
-$(NT_DWI_QA): $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
+$(NT_DWI_QA): | $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
 	$(QIT_CMD) VolumeDifferenceMap \
     --left $(word 1, $+) --right $(word 2, $+) \
     --prefix "dwi_" --output $@.noise.csv
@@ -439,17 +439,17 @@ $(NT_DWI_QA): $(NT_DWI_RAW) $(NT_DWI_NLM) $(NT_DWI_EDDY)
 	$(QIT_CMD) MapCatBatch --input $@.noise.csv $@.motion.csv --output $@
 	rm $@.noise.csv $@.motion.csv
 
-$(NT_DWI_INPUT): $(NT_DWI_EDDY)
+$(NT_DWI_INPUT): | $(NT_DWI_EDDY)
 	cp $(word 1, $+)/out.nii.gz $@
 
-$(NT_DWI_BVALS): $(NT_DWI_EDDY)
+$(NT_DWI_BVALS): | $(NT_DWI_EDDY)
 	$(QIT_CMD) VectsTransform --rows --input $(word 1, $+)/bvals --output $@
 
-$(NT_DWI_BVECS): $(NT_DWI_EDDY)
+$(NT_DWI_BVECS): | $(NT_DWI_EDDY)
 	$(QIT_CMD) VectsTransform --rows \
     --input $(word 1, $+)/out.eddy_rotated_bvecs --output $@
 
-$(NT_DWI_ALL_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) 
+$(NT_DWI_ALL_DTI): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) 
 	$(QIT_CMD) VolumeTensorFit \
     --rounder 100 \
     --shells 0,2800,2900,3000 \
@@ -458,7 +458,7 @@ $(NT_DWI_ALL_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS)
     --gradients $(word 2, $+) \
     --output $@
 
-$(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+$(NT_DWI_DTI): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeTensorFit \
     --rounder 100 \
     --shells 0,2800,2900,3000 \
@@ -468,7 +468,7 @@ $(NT_DWI_DTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MA
     --mask $(word 4, $+) \
     --output $@
 
-$(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK) $(NT_SHELLS)
+$(NT_DWI_ADC): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK) $(NT_SHELLS)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(QIT_CMD) VolumeDwiFeature \
@@ -484,7 +484,7 @@ $(NT_DWI_ADC): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MA
     --outputBeta $@.$(TMP)/adc.nii.gz
 	mv $@.$(TMP) $@
 
-$(NT_DWI_FWDTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+$(NT_DWI_FWDTI): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeTensorFit \
     --method FWWLLS \
     --input $(word 1, $+) \
@@ -492,21 +492,21 @@ $(NT_DWI_FWDTI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_
     --mask $(word 4, $+) \
     --output $@
 
-$(NT_DWI_NODDI): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+$(NT_DWI_NODDI): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) VolumeNoddiFit \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
     --mask $(word 4, $+) \
     --output $@
 
-$(NT_DWI_XFIB): $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
+$(NT_DWI_XFIB): | $(NT_DWI_INPUT) $(NT_DWI_BVECS) $(NT_DWI_BVALS) $(NT_DWI_BRAIN_MASK)
 	$(QIT_CMD) $(FIBERS_FIT) \
     --input $(word 1, $+) \
     --gradients $(word 2, $+) \
     --mask $(word 4, $+) \
     --output $@
 
-$(NT_DWI_BRAIN_MASK): $(NT_DWI_ALL_DTI)
+$(NT_DWI_BRAIN_MASK): | $(NT_DWI_ALL_DTI)
 	$(QIT_CMD) VolumeBrainExtract \
     --input $(word 1, $+) \
     --output $@.tmp.nii.gz
@@ -524,7 +524,7 @@ $(NT_DWI_BRAIN_MASK): $(NT_DWI_ALL_DTI)
 # Parameter Estimation - MGE  
 ##############################################################################
 
-$(NT_MGE_RAW): $(NT_SOURCE)/common/mge.nii.gz
+$(NT_MGE_RAW): | $(NT_SOURCE)/common/mge.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \
@@ -536,22 +536,22 @@ $(NT_MGE_RAW): $(NT_SOURCE)/common/mge.nii.gz
     --output $@
 	rm $@.tmp.nii.gz
 
-$(NT_MGE_MEAN_RAW): $(NT_MGE_RAW)
+$(NT_MGE_MEAN_RAW): | $(NT_MGE_RAW)
 	$(QIT_CMD) VolumeReduce \
     --input $(word 1, $+) \
     --method Mean \
     --output $@
 
-$(NT_MGE_NLM): $(NT_MGE_RAW)
+$(NT_MGE_NLM): | $(NT_MGE_RAW)
 	$(QIT_CMD) VolumeDenoiseAnts --multi \
     --input $(word 1, $+) --output $@
 
-$(NT_MGE_QA): $(NT_MGE_RAW) $(NT_MGE_NLM)
+$(NT_MGE_QA): | $(NT_MGE_RAW) $(NT_MGE_NLM)
 	$(QIT_CMD) VolumeDifferenceMap \
     --left $(word 1, $+) --right $(word 2, $+) \
     --prefix "mge_" --output $@
 
-$(NT_MGE_MEAN): $(NT_MGE_NLM)
+$(NT_MGE_MEAN): | $(NT_MGE_NLM)
 	mkdir -p $(NT_MGE_MODEL)
 	$(QIT_CMD) VolumeExpDecayFit \
     --start 2.73 --step 3.1 \
@@ -578,16 +578,16 @@ $(NT_MGE_MEAN): $(NT_MGE_NLM)
     --a $(NT_MGE_BIASED) --expression "a*5000" --output $(NT_MGE_BIASED)
 	N4BiasFieldCorrection -i $(NT_MGE_BIASED) -o $@
 	$(QIT_CMD) VolumeConvert --input $@ --output $@
-$(NT_MGE_BIASED): $(NT_MGE_MEAN)
+$(NT_MGE_BIASED): | $(NT_MGE_MEAN)
 
-$(NT_MGE_MASK): $(NT_MGE_BIASED)
+$(NT_MGE_MASK): | $(NT_MGE_BIASED)
 	$(ROOT)/bin/EpibiosAuxSkullStrip.sh $(word 1, $+) $@
 
 ##############################################################################
 # Parameter Estimation - MTR
 ##############################################################################
 
-$(NT_MTR_LOW_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
+$(NT_MTR_LOW_RAW): | $(NT_SOURCE)/common/mt.low.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \
@@ -599,7 +599,7 @@ $(NT_MTR_LOW_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
     --output $@
 	rm $@.tmp.nii.gz
 
-$(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
+$(NT_MTR_HIGH_RAW): | $(NT_SOURCE)/common/mt.low.nii.gz
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) --fresh VolumeStandardize \
     --input $(word 1, $+) \
@@ -611,21 +611,21 @@ $(NT_MTR_HIGH_RAW): $(NT_SOURCE)/common/mt.low.nii.gz
     --output $@
 	rm $@.tmp.nii.gz
 
-$(NT_MTR_LOW_NLM): $(NT_MTR_LOW_RAW)
+$(NT_MTR_LOW_NLM): | $(NT_MTR_LOW_RAW)
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) VolumeDenoiseAnts --multi \
      --input $(word 1, $+) --output $@
 
-$(NT_MTR_HIGH_NLM): $(NT_MTR_HIGH_RAW)
+$(NT_MTR_HIGH_NLM): | $(NT_MTR_HIGH_RAW)
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) VolumeDenoiseAnts --multi \
     --input $(word 1, $+) --output $@
 
-$(NT_MTR_MASK): $(NT_MTR_HIGH_NLM)
+$(NT_MTR_MASK): | $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)
 	$(ROOT)/bin/EpibiosAuxSkullStrip.sh $(word 1, $+) $@
 
-$(NT_MTR_RATIO): $(NT_MTR_LOW_NLM) $(NT_MTR_HIGH_NLM)
+$(NT_MTR_RATIO): | $(NT_MTR_LOW_NLM) $(NT_MTR_HIGH_NLM)
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) VolumeVoxelMathScalar \
     --a $(word 1, $+) \
@@ -633,7 +633,7 @@ $(NT_MTR_RATIO): $(NT_MTR_LOW_NLM) $(NT_MTR_HIGH_NLM)
     --expression "min(1.0, max(0.0, 1.0 - a/b))" \
     --output $@
 
-$(NT_MTR_RATIO_RAW): $(NT_MTR_LOW_RAW) $(NT_MTR_HIGH_RAW)
+$(NT_MTR_RATIO_RAW): | $(NT_MTR_LOW_RAW) $(NT_MTR_HIGH_RAW)
 	-mkdir -p $(dir $@)
 	$(QIT_CMD) VolumeVoxelMathScalar \
     --a $(word 1, $+) \
@@ -645,7 +645,7 @@ $(NT_MTR_RATIO_RAW): $(NT_MTR_LOW_RAW) $(NT_MTR_HIGH_RAW)
 # Parameter Harmonization
 ##############################################################################
 
-$(NT_DWI_FIT): $(NT_DWI_BRAIN_MASK) $(NT_DWI_DTI) $(NT_DWI_ADC) $(if $(MULTI), $(NT_DWI_FWDTI) $(NT_DWI_NODDI))
+$(NT_DWI_FIT): | $(NT_DWI_BRAIN_MASK) $(NT_DWI_DTI) $(NT_DWI_ADC) $(if $(MULTI), $(NT_DWI_FWDTI) $(NT_DWI_NODDI))
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -659,20 +659,20 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(NT_MGE_FIT): $(NT_MGE_MASK) $(NT_MGE_MEAN)
+$(NT_MGE_FIT): | $(NT_MGE_MASK) $(NT_MGE_MEAN)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call vol.mask, $(NT_MGE_MODEL)/$(p).nii.gz, $(word 1, $+), $@.$(TMP)/$(p).nii.gz))
 	mv $@.$(TMP) $@
 
-$(NT_MTR_FIT): $(NT_MTR_RATIO) $(NT_MTR_MASK)
+$(NT_MTR_FIT): | $(NT_MTR_RATIO) $(NT_MTR_MASK)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(call vol.mask, $(word 1, $+), $(word 2, $+), $@.$(TMP)/mtr_ratio.nii.gz)
 	mv $@.$(TMP) $@
 
-$(NT_DWI_HARM): $(NT_DWI_BRAIN_MASK) $(NT_DWI_FIT)
+$(NT_DWI_HARM): | $(NT_DWI_BRAIN_MASK) $(NT_DWI_FIT)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -686,14 +686,14 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(NT_MGE_HARM): $(NT_MGE_MODEL) $(NT_MGE_MASK)
+$(NT_MGE_HARM): | $(NT_MGE_MODEL) $(NT_MGE_MASK)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call harmonize,$(word 1, $+),$(p),$(word 2, $+),$@.$(TMP)))
 	mv $@.$(TMP) $@
 
-$(NT_MTR_HARM): $(NT_MTR_FIT) $(NT_MTR_MASK)
+$(NT_MTR_HARM): | $(NT_MTR_FIT) $(NT_MTR_MASK)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(call harmonize,$(word 1, $+),mtr_ratio,$(word 2, $+),$@.$(TMP))
@@ -703,7 +703,7 @@ $(NT_MTR_HARM): $(NT_MTR_FIT) $(NT_MTR_MASK)
 # Registration
 ##############################################################################
 
-$(AT_MGE_WARP): $(NT_MGE_MEAN)
+$(AT_MGE_WARP): | $(NT_MGE_MEAN)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(QIT_CMD) VolumeRegisterDeformAnts $(ANTS_FLAGS) \
@@ -711,11 +711,11 @@ $(AT_MGE_WARP): $(NT_MGE_MEAN)
     --ref $(ROOT)/data/reference/head.nii.gz \
     --output $(AT_MGE_WARP)
 	mv $@.$(TMP) $@
-$(AT_TO_NT_MGE): $(AT_MGE_WARP)
-$(NT_TO_AT_MGE): $(AT_MGE_WARP)
-$(AT_MGE_JAC): $(AT_MGE_WARP)
+$(AT_TO_NT_MGE): | $(AT_MGE_WARP)
+$(NT_TO_AT_MGE): | $(AT_MGE_WARP)
+$(AT_MGE_JAC): | $(AT_MGE_WARP)
 
-$(AT_MTR_WARP): $(NT_MTR_RATIO)
+$(AT_MTR_WARP): | $(NT_MTR_RATIO)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(QIT_CMD) VolumeRegisterDeformAnts $(ANTS_FLAGS) \
@@ -723,11 +723,11 @@ $(AT_MTR_WARP): $(NT_MTR_RATIO)
     --ref $(ROOT)/data/reference/head.nii.gz \
     --output $(AT_MTR_WARP)
 	mv $@.$(TMP) $@
-$(AT_TO_NT_MTR): $(AT_MTR_WARP)
-$(NT_TO_AT_MTR): $(AT_MTR_WARP)
-$(AT_MTR_JAC): $(AT_MTR_WARP)
+$(AT_TO_NT_MTR): | $(AT_MTR_WARP)
+$(NT_TO_AT_MTR): | $(AT_MTR_WARP)
+$(AT_MTR_JAC): | $(AT_MTR_WARP)
 
-$(AT_DWI_WARP): $(NT_DWI_DTI)
+$(AT_DWI_WARP): | $(NT_DWI_DTI)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(QIT_CMD) VolumeRegisterDeformAnts $(ANTS_FLAGS) \
@@ -737,11 +737,11 @@ $(AT_DWI_WARP): $(NT_DWI_DTI)
     --refSecondary $(ROOT)/data/models.dti/dti_MD.nii.gz \
     --output $(AT_DWI_WARP)
 	mv $@.$(TMP) $@
-$(AT_TO_NT_DWI): $(AT_DWI_WARP)
-$(NT_TO_AT_DWI): $(AT_DWI_WARP)
-$(AT_DWI_JAC): $(AT_DWI_WARP)
+$(AT_TO_NT_DWI): | $(AT_DWI_WARP)
+$(NT_TO_AT_DWI): | $(AT_DWI_WARP)
+$(AT_DWI_JAC): | $(AT_DWI_WARP)
 
-$(AT_DWI_XFIB): $(NT_DWI_XFIB) $(NT_DWI_BRAIN_MASK) $(AT_TO_NT_DWI)
+$(AT_DWI_XFIB): | $(NT_DWI_XFIB) $(NT_DWI_BRAIN_MASK) $(AT_TO_NT_DWI)
 	$(QIT_CMD) VolumeFibersTransform \
     --input $(word 1, $+) \
     --inputMask $(word 2, $+) \
@@ -750,25 +750,25 @@ $(AT_DWI_XFIB): $(NT_DWI_XFIB) $(NT_DWI_BRAIN_MASK) $(AT_TO_NT_DWI)
     --deform $(word 3, $+) \
     --output $@
 
-$(NT_DWI_JAC): $(AT_DWI_JAC) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_JAC): | $(AT_DWI_JAC) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(call vol.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_MGE_JAC): $(AT_MGE_JAC) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_JAC): | $(AT_MGE_JAC) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	$(call vol.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_MTR_JAC): $(AT_MTR_JAC) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
+$(NT_MTR_JAC): | $(AT_MTR_JAC) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
 	$(call vol.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(AT_DWI_BRAIN_MASK): $(NT_DWI_BRAIN_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
+$(AT_DWI_BRAIN_MASK): | $(NT_DWI_BRAIN_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	$(call mask.xfm,$(word 1, $+), $(word 2, $+), $(word 3, $+),$@)
 
-$(AT_MGE_MASK): $(NT_MGE_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
+$(AT_MGE_MASK): | $(NT_MGE_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
 	$(call mask.xfm,$(word 1, $+), $(word 2, $+), $(word 3, $+),$@)
 
-$(AT_MTR_MASK): $(NT_MTR_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
+$(AT_MTR_MASK): | $(NT_MTR_MASK) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
 	$(call mask.xfm,$(word 1, $+), $(word 2, $+), $(word 3, $+),$@)
 
-$(AT_DWI_FIT): $(NT_DWI_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
+$(AT_DWI_FIT): | $(NT_DWI_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -782,20 +782,20 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_MGE_FIT): $(NT_MGE_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
+$(AT_MGE_FIT): | $(NT_MGE_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_FIT): $(NT_MTR_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
+$(AT_MTR_FIT): | $(NT_MTR_FIT) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@,mtr_ratio)
 	mv $@.$(TMP) $@
 
-$(AT_DWI_HARM): $(NT_DWI_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
+$(AT_DWI_HARM): | $(NT_DWI_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_DWI)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -809,14 +809,14 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_MGE_HARM): $(NT_MGE_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
+$(AT_MGE_HARM): | $(NT_MGE_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MGE)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
   	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_HARM): $(NT_MTR_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
+$(AT_MTR_HARM): | $(NT_MTR_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
 	-rm -rf $@
 	-mkdir -p $@.$(TMP)
 	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@,mtr_ratio)
@@ -826,7 +826,7 @@ $(AT_MTR_HARM): $(NT_MTR_HARM) $(AT_BRAIN_MASK) $(AT_TO_NT_MTR)
 # Z-Scoring 
 ##############################################################################
 
-$(AT_DWI_NORM): $(AT_DWI_HARM)
+$(AT_DWI_NORM): | $(AT_DWI_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -840,20 +840,20 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_MGE_NORM): $(AT_MGE_HARM)
+$(AT_MGE_NORM): | $(AT_MGE_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call zscore,$(word 1, $+),$(p),$@.$(TMP)))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_NORM): $(AT_MTR_HARM)
+$(AT_MTR_NORM): | $(AT_MTR_HARM)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(call zscore,$(word 1, $+),mtr_ratio,$@.$(TMP))
 	mv $@.$(TMP) $@
 
-$(NT_DWI_NORM): $(AT_DWI_NORM) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_NORM): | $(AT_DWI_NORM) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_AD dti_RD, \
@@ -867,14 +867,14 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(NT_MGE_NORM): $(AT_MGE_NORM) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_NORM): | $(AT_MGE_NORM) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
     $(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),$(p)))
 	mv $@.$(TMP) $@
 
-$(NT_MTR_NORM): $(AT_MTR_NORM) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
+$(NT_MTR_NORM): | $(AT_MTR_NORM) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	$(call param.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@.$(TMP),mtr_ratio)
@@ -884,7 +884,7 @@ $(NT_MTR_NORM): $(AT_MTR_NORM) $(NT_MTR_MASK) $(NT_TO_AT_MTR)
 # Skeleton-based Segmentation
 ##############################################################################
 
-$(AT_DWI_FIT_TBSS): $(AT_DWI_FIT)
+$(AT_DWI_FIT_TBSS): | $(AT_DWI_FIT)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -898,7 +898,7 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_DWI_HARM_TBSS): $(AT_DWI_HARM)
+$(AT_DWI_HARM_TBSS): | $(AT_DWI_HARM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -912,7 +912,7 @@ ifneq ($(MULTI),)
 endif
 	mv $@.$(TMP) $@
 
-$(AT_DWI_NORM_TBSS): $(AT_DWI_NORM)
+$(AT_DWI_NORM_TBSS): | $(AT_DWI_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -927,7 +927,7 @@ endif
 
 	mv $@.$(TMP) $@
 
-$(AT_MGE_FIT_TBSS): $(AT_MGE_FIT)
+$(AT_MGE_FIT_TBSS): | $(AT_MGE_FIT)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -935,7 +935,7 @@ $(AT_MGE_FIT_TBSS): $(AT_MGE_FIT)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MGE_HARM_TBSS): $(AT_MGE_HARM)
+$(AT_MGE_HARM_TBSS): | $(AT_MGE_HARM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -943,7 +943,7 @@ $(AT_MGE_HARM_TBSS): $(AT_MGE_HARM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MGE_NORM_TBSS): $(AT_MGE_NORM)
+$(AT_MGE_NORM_TBSS): | $(AT_MGE_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -951,7 +951,7 @@ $(AT_MGE_NORM_TBSS): $(AT_MGE_NORM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_FIT_TBSS): $(AT_MTR_FIT)
+$(AT_MTR_FIT_TBSS): | $(AT_MTR_FIT)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -959,7 +959,7 @@ $(AT_MTR_FIT_TBSS): $(AT_MTR_FIT)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_HARM_TBSS): $(AT_MTR_HARM)
+$(AT_MTR_HARM_TBSS): | $(AT_MTR_HARM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -967,7 +967,7 @@ $(AT_MTR_HARM_TBSS): $(AT_MTR_HARM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_MTR_NORM_TBSS): $(AT_MTR_NORM)
+$(AT_MTR_NORM_TBSS): | $(AT_MTR_NORM)
 	-rm -rf $@
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	mkdir -p $@.$(TMP)
@@ -975,19 +975,19 @@ $(AT_MTR_NORM_TBSS): $(AT_MTR_NORM)
   	$(call tbss, $(word 1,$+)/$(m).nii.gz, $@.$(TMP)/$(m).nii.gz))
 	mv $@.$(TMP) $@
 
-$(AT_DWI_TBSS_MASK): $(AT_DWI_TISSUE_MASK)
+$(AT_DWI_TBSS_MASK): | $(AT_DWI_TISSUE_MASK)
 	$(QIT_CMD) MaskIntersection \
     --left $(ROOT)/data/skeleton/mean_FA_skeleton_mask.nii.gz \
     --right $(word 1, $+) \
     --output $@
 
-$(AT_MGE_TBSS_MASK): $(AT_MGE_TISSUE_MASK)
+$(AT_MGE_TBSS_MASK): | $(AT_MGE_TISSUE_MASK)
 	$(QIT_CMD) MaskIntersection \
     --left $(ROOT)/data/skeleton/mean_FA_skeleton_mask.nii.gz \
     --right $(word 1, $+) \
     --output $@
 
-$(AT_MTR_TBSS_MASK): $(AT_MTR_TISSUE_MASK)
+$(AT_MTR_TBSS_MASK): | $(AT_MTR_TISSUE_MASK)
 	$(QIT_CMD) MaskIntersection \
     --left $(ROOT)/data/skeleton/mean_FA_skeleton_mask.nii.gz \
     --right $(word 1, $+) \
@@ -1001,7 +1001,7 @@ define region.copy
 $(eval MY_INPUT  := $(1))
 $(eval MY_OUTPUT := $(2))
 
-$(MY_OUTPUT): $(MY_INPUT)
+$(MY_OUTPUT): | $(MY_INPUT)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	mkdir -p $$@
 	cp -r $$(word 1, $$+)/rois.nii.gz $$@
@@ -1014,7 +1014,7 @@ $(eval REF    := $(2))
 $(eval DEFORM := $(3))
 $(eval OUTPUT := $(4))
 
-$(OUTPUT): $(INPUT) $(REF) $(DEFORM)
+$(OUTPUT): | $(INPUT) $(REF) $(DEFORM)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	mkdir -p $$@.$$(TMP) 
 	$$(call mask.xfm, $$(word 1, $$+)/rois.nii.gz, $$(word 2, $$+), $$(word 3, $$+), $$@.$$(TMP)/rois.nii.gz)
@@ -1058,7 +1058,7 @@ $(eval MY_LESION   := $(MY_SRC)/lesion.vtk.gz)
 $(eval MY_SIMPLE   := $(MY_SRC)/simple.vtk.gz)
 $(eval MY_LIST     := $(MY_OUT)/bundles.txt)
 
-$(MY_SEED): $(MY_REF) $(MY_XFM)
+$(MY_SEED): | $(MY_REF) $(MY_XFM)
 	-mkdir -p $$(dir $$@)
 	$(QIT_CMD) MaskTransformBatch \
     --threads $(QIT_THREADS) \
@@ -1067,25 +1067,25 @@ $(MY_SEED): $(MY_REF) $(MY_XFM)
     --reference $$(word 1, $$+) \
     --deform $$(word 2, $$+) \
     --output $(MY_OUT)/bundles/$(MY_NAME)/%s.nii.gz
-$(MY_INC): $(MY_SEED)
-$(MY_EXC): $(MY_SEED)
-$(MY_END): $(MY_SEED)
+$(MY_INC): | $(MY_SEED)
+$(MY_EXC): | $(MY_SEED)
+$(MY_END): | $(MY_SEED)
 
-$(MY_SEEDS): $(MY_DATA)/seeds.txt.gz $(MY_INVXFM)
+$(MY_SEEDS): | $(MY_DATA)/seeds.txt.gz $(MY_INVXFM)
 	-mkdir -p $$(dir $$@)
 	$(QIT_CMD) VectsTransform \
     --input $$(word 1, $$+) \
     --deform $$(word 2, $$+) \
     --output $$@
 
-$(MY_PROTO): $(MY_DATA)/proto.vtk.gz $(MY_INVXFM)
+$(MY_PROTO): | $(MY_DATA)/proto.vtk.gz $(MY_INVXFM)
 	-mkdir -p $$(dir $$@)
 	$(QIT_CMD) CurvesTransform \
     --input $$(word 1, $$+) \
     --deform $$(word 2, $$+) \
     --output $$@
 
-$(MY_TOM): $(MY_DATA)/tom.nii.gz $(MY_MODELS) $(MY_SEED) $(MY_XFM)
+$(MY_TOM): | $(MY_DATA)/tom.nii.gz $(MY_MODELS) $(MY_SEED) $(MY_XFM)
 	-mkdir -p $$(dir $$@)
 	$(QIT_CMD) VolumeFibersProjectVector $(PROJECT_FLAGS) \
     --angle $(PROJECT_ANGLE) \
@@ -1102,7 +1102,7 @@ $(MY_TOM): $(MY_DATA)/tom.nii.gz $(MY_MODELS) $(MY_SEED) $(MY_XFM)
     --output $$@
 
 ifeq ($(BUNDLE_METHOD),Hybrid)
-$(MY_CURVES): $(MY_MODELS) $(MY_SEEDS) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
+$(MY_CURVES): | $(MY_MODELS) $(MY_SEEDS) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
 	-mkdir -p $$(dir $$@)
 	$(eval MY_CURVES_TMP := $(MY_CURVES).$(TMP).vtk.gz)
 	$(QIT_CMD) VolumeModelTrackStreamline $(BUNDLE_FLAGS) \
@@ -1135,7 +1135,7 @@ $(MY_CURVES): $(MY_MODELS) $(MY_SEEDS) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_AT
     --output $(MY_CURVES_TMP)
 	mv $(MY_CURVES_TMP) $(MY_CURVES)
 else ifeq ($(BUNDLE_METHOD),Prior)
-$(MY_CURVES): $(MY_TOM) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
+$(MY_CURVES): | $(MY_TOM) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
 	-mkdir -p $$(dir $$@)
 	$(eval MY_CURVES_TMP := $(MY_CURVES).$(TMP).vtk.gz)
 	$(QIT_CMD) VolumeModelTrackStreamline $(BUNDLE_FLAGS) \
@@ -1162,7 +1162,7 @@ $(MY_CURVES): $(MY_TOM) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_
     --output $(MY_CURVES_TMP)
 	mv $(MY_CURVES_TMP) $(MY_CURVES)
 else ifeq ($(BUNDLE_METHOD),Determ)
-$(MY_CURVES): $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
+$(MY_CURVES): | $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
 	-mkdir -p $$(dir $$@)
 	$(eval MY_CURVES_TMP := $(MY_CURVES).$(TMP).vtk.gz)
 	$(QIT_CMD) VolumeModelTrackStreamline $(BUNDLE_FLAGS) \
@@ -1189,7 +1189,7 @@ $(MY_CURVES): $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATL
     --output $(MY_CURVES_TMP)
 	mv $(MY_CURVES_TMP) $(MY_CURVES)
 else ifeq ($(BUNDLE_METHOD),Prob)
-$(MY_CURVES): $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
+$(MY_CURVES): | $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATLAS_MASK) $(MY_PROTO)
 	-mkdir -p $$(dir $$@)
 	$(eval MY_CURVES_TMP := $(MY_CURVES).$(TMP).vtk.gz)
 	$(QIT_CMD) VolumeModelTrackStreamline $(BUNDLE_FLAGS) \
@@ -1218,19 +1218,19 @@ $(MY_CURVES): $(MY_MODELS) $(MY_SEED) $(MY_INC) $(MY_EXC) $(MY_END) $(NT_DWI_ATL
 	mv $(MY_CURVES_TMP) $(MY_CURVES)
 endif
 
-$(MY_TISSUE): $(MY_CURVES) $(NT_DWI_TISSUE_MASK)
+$(MY_TISSUE): | $(MY_CURVES) $(NT_DWI_TISSUE_MASK)
 	$(QIT_CMD) CurvesCrop \
     --input $$(word 1, $$+) \
     --mask $$(word 2, $$+) \
     --output $$@
 
-$(MY_LESION): $(MY_CURVES) $(NT_DWI_LESION_MASK)
+$(MY_LESION): | $(MY_CURVES) $(NT_DWI_LESION_MASK)
 	$(QIT_CMD) CurvesCrop \
     --input $$(word 1, $$+) \
     --mask $$(word 2, $$+) \
     --output $$@
 
-$(MY_SIMPLE): $(MY_CURVES) $(MY_MODELS) $(MY_TISSUE) $(MY_LESION)
+$(MY_SIMPLE): | $(MY_CURVES) $(MY_MODELS) $(MY_TISSUE) $(MY_LESION)
 	$(eval MY_SIMPLE_TMP := $(MY_CURVES).$(TMP).vtk.gz)
 	$(QIT_CMD) CurvesClusterSCPT \
     --input $$(word 1, $$+) \
@@ -1243,14 +1243,14 @@ $(MY_SIMPLE): $(MY_CURVES) $(MY_MODELS) $(MY_TISSUE) $(MY_LESION)
     --output $(MY_SIMPLE_TMP)
 	mv $(MY_SIMPLE_TMP) $$@
 
-$(MY_LIST): $(MY_SIMPLE)
+$(MY_LIST): | $(MY_SIMPLE)
 endef
 
 ##############################################################################
 # Lesion Segmentation
 ##############################################################################
 
-$(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
+$(AT_DWI_LESION): | $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1263,10 +1263,10 @@ $(AT_DWI_LESION): $(AT_DWI_BRAIN_MASK) $(AT_LESION_MASK) $(AT_DWI_NORM)
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
-$(AT_DWI_TISSUE_MASK): $(AT_DWI_LESION)
-$(AT_DWI_LESION_MASK): $(AT_DWI_LESION)
+$(AT_DWI_TISSUE_MASK): | $(AT_DWI_LESION)
+$(AT_DWI_LESION_MASK): | $(AT_DWI_LESION)
 
-$(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_NORM)
+$(AT_MGE_LESION): | $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1279,22 +1279,22 @@ $(AT_MGE_LESION): $(AT_MGE_MASK) $(AT_LESION_MASK) $(AT_MGE_NORM)
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
-$(AT_MGE_TISSUE_MASK): $(AT_MGE_LESION)
-$(AT_MGE_LESION_MASK): $(AT_MGE_LESION)
+$(AT_MGE_TISSUE_MASK): | $(AT_MGE_LESION)
+$(AT_MGE_LESION_MASK): | $(AT_MGE_LESION)
 
-$(NT_DWI_ATLAS_MASK): $(AT_BRAIN_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_ATLAS_MASK): | $(AT_BRAIN_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_MGE_ATLAS_MASK): $(AT_BRAIN_MASK) $(NT_MGE_BRAIN_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_ATLAS_MASK): | $(AT_BRAIN_MASK) $(NT_MGE_BRAIN_MASK) $(NT_TO_AT_MGE)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_DWI_PRIOR): $(AT_LESION_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
+$(NT_DWI_PRIOR): | $(AT_LESION_MASK) $(NT_DWI_BRAIN_MASK) $(NT_TO_AT_DWI)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_MGE_PRIOR): $(AT_LESION_MASK) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
+$(NT_MGE_PRIOR): | $(AT_LESION_MASK) $(NT_MGE_MASK) $(NT_TO_AT_MGE)
 	$(call mask.xfm, $(word 1, $+), $(word 2, $+), $(word 3, $+), $@)
 
-$(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_NORM)
+$(NT_DWI_LESION): | $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1307,10 +1307,10 @@ $(NT_DWI_LESION): $(NT_DWI_BRAIN_MASK) $(NT_DWI_PRIOR) $(NT_DWI_NORM)
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
-$(NT_DWI_TISSUE_MASK): $(NT_DWI_LESION)
-$(NT_DWI_LESION_MASK): $(NT_DWI_LESION)
+$(NT_DWI_TISSUE_MASK): | $(NT_DWI_LESION)
+$(NT_DWI_LESION_MASK): | $(NT_DWI_LESION)
 
-$(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_NORM)
+$(NT_MGE_LESION): | $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_NORM)
 	-rm -rf $@
 	$(ROOT)/bin/EpibiosAuxSegmentLesion.sh \
     --mask $(word 1, $+) \
@@ -1323,31 +1323,31 @@ $(NT_MGE_LESION): $(NT_MGE_MASK) $(NT_MGE_PRIOR) $(NT_MGE_NORM)
     --minvox $(LESION_MINVOX) \
     --levels $(PERILESION_LEVELS) \
     --output $@
-$(NT_MGE_TISSUE_MASK): $(NT_MGE_LESION)
-$(NT_MGE_LESION_MASK): $(NT_MGE_LESION)
+$(NT_MGE_TISSUE_MASK): | $(NT_MGE_LESION)
+$(NT_MGE_LESION_MASK): | $(NT_MGE_LESION)
 
-$(AT_DWI_PERILESION): $(AT_DWI_LESION)
+$(AT_DWI_PERILESION): | $(AT_DWI_LESION)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	cp $(word 1, $+)/rings.nii.gz $@.$(TMP)/rois.nii.gz
 	cp $(word 1, $+)/rings.csv $@.$(TMP)/rois.csv
 	mv $@.$(TMP) $@
 
-$(NT_DWI_PERILESION): $(NT_DWI_LESION)
+$(NT_DWI_PERILESION): | $(NT_DWI_LESION)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	cp $(word 1, $+)/rings.nii.gz $@.$(TMP)/rois.nii.gz
 	cp $(word 1, $+)/rings.csv $@.$(TMP)/rois.csv
 	mv $@.$(TMP) $@
 
-$(AT_MGE_PERILESION): $(AT_MGE_LESION)
+$(AT_MGE_PERILESION): | $(AT_MGE_LESION)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	cp $(word 1, $+)/rings.nii.gz $@.$(TMP)/rois.nii.gz
 	cp $(word 1, $+)/rings.csv $@.$(TMP)/rois.csv
 	mv $@.$(TMP) $@
 
-$(NT_MGE_PERILESION): $(NT_MGE_LESION)
+$(NT_MGE_PERILESION): | $(NT_MGE_LESION)
 	-rm -rf $@
 	mkdir -p $@.$(TMP)
 	cp $(word 1, $+)/rings.nii.gz $@.$(TMP)/rois.nii.gz
@@ -1371,7 +1371,7 @@ $(eval MY_DWI_PARAM   := atlas.dwi/param/$(MY_PARAM))
 $(eval MY_MGE_MASK    := atlas.mge/lesion/tissue.nii.gz)
 $(eval MY_MGE_PARAM   := atlas.mge/param/$(MY_PARAM))
 
-$(MY_REGIONS).dwi.$(MY_PARAM).map: $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_MASK)
+$(MY_REGIONS).dwi.$(MY_PARAM).map: | $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_MASK)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
@@ -1383,7 +1383,7 @@ ifneq ($(MULTI),)
 endif
 	mv $$@.$$(TMP) $$@
 
-$(MY_REGIONS).mge.$(MY_PARAM).map: $(MY_REGIONS) $(MY_MGE_PARAM) $(MY_MGE_MASK)
+$(MY_REGIONS).mge.$(MY_PARAM).map: | $(MY_REGIONS) $(MY_MGE_PARAM) $(MY_MGE_MASK)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_MGE_PARAM),$(p),$(MY_MGE_MASK),$$@.$$(TMP)))
@@ -1400,7 +1400,7 @@ $(eval MY_DWI_PARAM   := atlas.dwi/param/$(MY_PARAM))
 $(eval MY_MGE_MASK    := atlas.dwi/lesion/tissue.nii.gz)
 $(eval MY_MGE_PARAM   := atlas.mge/param/$(MY_PARAM))
 
-$(MY_REGIONS).dwi.tbss.$(MY_PARAM).map: $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_MASK)
+$(MY_REGIONS).dwi.tbss.$(MY_PARAM).map: | $(MY_REGIONS) $(MY_DWI_PARAM) $(MY_DWI_MASK)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_DWI_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
@@ -1412,17 +1412,17 @@ ifneq ($(MULTI),)
 endif
 	mv $$@.$$(TMP) $$@
 
-$(MY_REGIONS).mge.tbss.$(MY_PARAM).map: $(MY_REGIONS) $(MY_MGE_PARAM) $(MY_MGE_MASK)
+$(MY_REGIONS).mge.tbss.$(MY_PARAM).map: | $(MY_REGIONS) $(MY_MGE_PARAM) $(MY_MGE_MASK)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	$(foreach p,mge_mean mge_r2star mge_t2star, \
 	  $$(call mask.ms,$(MY_REGIONS),$(MY_MGE_PARAM),$(p),$(MY_DWI_MASK),$$@.$$(TMP)))
 	mv $$@.$$(TMP) $$@
 endef
 
-native.dwi/tract/bundles.txt: $(BUNDLE_LIST)
+native.dwi/tract/bundles.txt: | $(BUNDLE_LIST)
 	cp $(word 1, $+) $@	
 
-native.dwi/tract/bundles.curves.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
+native.dwi/tract/bundles.curves.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureBatch \
     --threads $(QIT_THREADS) \
@@ -1436,7 +1436,7 @@ native.dwi/tract/bundles.curves.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
     --output $@.$(TMP)
 	mv $@.$(TMP) $@
 
-native.dwi/tract/bundles.tissue.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
+native.dwi/tract/bundles.tissue.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureBatch \
     --threads $(QIT_THREADS) \
@@ -1450,7 +1450,7 @@ native.dwi/tract/bundles.tissue.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
     --output $@.$(TMP)
 	mv $@.$(TMP) $@
 
-native.dwi/tract/bundles.lesion.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
+native.dwi/tract/bundles.lesion.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST) 
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureBatch \
     --threads $(QIT_THREADS) \
@@ -1464,7 +1464,7 @@ native.dwi/tract/bundles.lesion.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
     --output $@.$(TMP)
 	mv $@.$(TMP) $@
 
-native.dwi/tract/bundles.curves.along.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
+native.dwi/tract/bundles.curves.along.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST)
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureAlongBatch \
     --attrs diff_mean frac_mean \
@@ -1473,7 +1473,7 @@ native.dwi/tract/bundles.curves.along.map: native.dwi/tract/bundles.txt $(BUNDLE
     --output $@.$(TMP)
 	mv $@.$(TMP) $@
 
-native.dwi/tract/bundles.tissue.along.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
+native.dwi/tract/bundles.tissue.along.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST)
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureAlongBatch \
     --attrs diff_mean frac_mean \
@@ -1482,7 +1482,7 @@ native.dwi/tract/bundles.tissue.along.map: native.dwi/tract/bundles.txt $(BUNDLE
     --output $@.$(TMP)
 	mv $@.$(TMP) $@
 
-native.dwi/tract/bundles.lesion.along.map: native.dwi/tract/bundles.txt $(BUNDLE_LIST)
+native.dwi/tract/bundles.lesion.along.map: | native.dwi/tract/bundles.txt $(BUNDLE_LIST)
 	-@[ -e $@ ] && mv -f $@ $@.$(BCK)
 	$(QIT_CMD) CurvesMeasureAlongBatch \
     --attrs diff_mean frac_mean \
@@ -1500,7 +1500,7 @@ $(eval MY_BUNDLE := $(5))
 
 $(eval MY_SOURCE := native.dwi/param/$(MY_PARAM))
 
-$(MY_IN).$(MY_BUNDLE).$(MY_TYPE).$(MY_PARAM).map: $(MY_IN).txt $(MY_LIST) $(MY_SOURCE)
+$(MY_IN).$(MY_BUNDLE).$(MY_TYPE).$(MY_PARAM).map: | $(MY_IN).txt $(MY_LIST) $(MY_SOURCE)
 	-@[ -e $$@ ] && mv -f $$@ $$@.$$(BCK)
 	$(foreach p,dti_S0 dti_FA dti_MD dti_RD dti_AD, \
 	  $$(call $(MY_TYPE).ms,$(MY_IN),$(MY_LIST),$(MY_SOURCE),$(p),$(p),$$@.$$(TMP),$(MY_BUNDLE)))
@@ -1540,7 +1540,7 @@ $(eval MY_OUTPUT  := $(5))
 $(eval MY_ANAT    := $(MY_OUTPUT)_anatomy.png)
 $(eval MY_LESION  := $(MY_OUTPUT)_lesion.png)
 
-$(MY_ANAT): $(MY_INPUT) $(ROOT)/data/masks/empty.nii.gz
+$(MY_ANAT): | $(MY_INPUT) $(ROOT)/data/masks/empty.nii.gz
 	$(QIT_CMD) VolumeRender \
     --bghigh threeup \
     --alpha 1.0 \
@@ -1556,7 +1556,7 @@ $(MY_ANAT): $(MY_INPUT) $(ROOT)/data/masks/empty.nii.gz
     --output $$@
 	rm $$@.nii.gz
 
-$(MY_LESION): $(MY_INPUT) $(MY_MASK)
+$(MY_LESION): | $(MY_INPUT) $(MY_MASK)
 	$(QIT_CMD) VolumeRender \
     --bghigh threeup \
     --alpha 1.0 \
@@ -1597,7 +1597,7 @@ $(foreach p,mean r2star t2star, \
 # 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP),$(AT_MGE_VIS)/large_mge_$(p))) \
 # 	$(eval $(call vis, $(AT_MGE_HARM),mge_$(p).nii.gz,$(AT_MGE_LESION_MASK),$(VIS_CROP_SMALL),$(AT_MGE_VIS)/small_mge_$(p))))
 
-$(NT_DWI_RESIDUAL): $(NT_DWI_BRAIN_MASK) $(NT_DWI_INPUT) $(NT_DWI_BVECS) 
+$(NT_DWI_RESIDUAL): | $(NT_DWI_BRAIN_MASK) $(NT_DWI_INPUT) $(NT_DWI_BVECS) 
 	$(eval TMP := tmp.$(shell date +%s))
 	rm -rf $@
 	mkdir -p $@.$(TMP)
@@ -1624,7 +1624,7 @@ $(NT_DWI_RESIDUAL): $(NT_DWI_BRAIN_MASK) $(NT_DWI_INPUT) $(NT_DWI_BVECS)
     --output $@.$(TMP)/residual.cv.csv
 	mv $@.$(TMP) $@
 
-$(NT_MGE_RESIDUAL): $(NT_MGE_MASK) $(NT_MGE_MEAN) $(NT_MGE_MEAN_RAW)
+$(NT_MGE_RESIDUAL): | $(NT_MGE_MASK) $(NT_MGE_MEAN) $(NT_MGE_MEAN_RAW)
 	$(eval TMP := tmp.$(shell date +%s))
 	rm -rf $@
 	mkdir -p $@.$(TMP)
@@ -1642,7 +1642,7 @@ $(NT_MGE_RESIDUAL): $(NT_MGE_MASK) $(NT_MGE_MEAN) $(NT_MGE_MEAN_RAW)
     --output $@.$(TMP)/residual.csv
 	mv $@.$(TMP) $@
 
-$(NT_MTR_RESIDUAL): $(NT_MTR_MASK) $(NT_MTR_RATIO) $(NT_MTR_RAW)
+$(NT_MTR_RESIDUAL): | $(NT_MTR_MASK) $(NT_MTR_RATIO) $(NT_MTR_RAW)
 	$(eval TMP := tmp.$(shell date +%s))
 	rm -rf $@
 	mkdir -p $@.$(TMP)
@@ -1664,11 +1664,11 @@ $(NT_MTR_RESIDUAL): $(NT_MTR_MASK) $(NT_MTR_RATIO) $(NT_MTR_RAW)
 # Summary targets 
 ##############################################################################
 
-all.vis: $(VIS_ANAT_TARS) $(VIS_LESION_TARS)
+all.vis: | $(VIS_ANAT_TARS) $(VIS_LESION_TARS)
 
-all.qa: $(AT_DWI_RESIDUAL) $(AT_MGE_RESIDUAL) $(NT_DWI_QA) $(NT_DWI_QUAD) $(NT_MGE_QA)
+all.qa: | $(AT_DWI_RESIDUAL) $(AT_MGE_RESIDUAL) $(NT_DWI_QA) $(NT_DWI_QUAD) $(NT_MGE_QA)
 
-all.tract: \
+all.tract: | \
 	$(foreach t, curves tissue lesion, \
 		native.dwi/tract/bundles.$(t).map) \
 	$(foreach b, curves tissue lesion, \
@@ -1677,7 +1677,7 @@ all.tract: \
 				$(foreach p, fit harm norm, \
 					native.dwi/tract/bundles.$(b).$(m).$(t).$(p).map))))
 
-all.region: \
+all.region: | \
 	$(foreach t, $(AT_REGIONS), \
 		$(foreach p, fit harm norm, \
       atlas/region/$(t).dwi.tbss.$(p).map \
@@ -1685,15 +1685,15 @@ all.region: \
       atlas/region/$(t).dwi.$(p).map \
       atlas/region/$(t).mge.$(p).map))
 
-all: all.vis all.qa all.region all.tract $(AT_DWI_XFIB)
+all: | all.vis all.qa all.region all.tract $(AT_DWI_XFIB)
 
-params: $(VIS_ANAT_TARS) $(AT_DWI_HARM) $(AT_MGE_NORM) $(AT_DWI_FIT) 
+params: | $(VIS_ANAT_TARS) $(AT_DWI_HARM) $(AT_MGE_NORM) $(AT_DWI_FIT) 
 
-zscores: params \
+zscores: | params \
          $(AT_DWI_HARM) $(AT_MGE_NORM) \
          $(NT_DWI_NORM) $(NT_MGE_NORM)
 
-lesion: zscores $(VIS_LESION_TARS) \
+lesion: | zscores $(VIS_LESION_TARS) \
         $(AT_DWI_LESION) $(AT_MGE_LESION) $(NT_DWI_LESION) $(NT_MGE_LESION)
 
 ################################################################################
