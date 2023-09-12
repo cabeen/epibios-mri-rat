@@ -1,8 +1,0 @@
-{
-  "name": "VolumeFilterNLM",
-  "parameters": {
-    "h": "0.08",
-    "hrel": "true",
-    "hrelwhich": "0"
-  }
-}
